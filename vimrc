@@ -11,7 +11,6 @@ vim9script
 filetype plugin indent on
 syntax on
 g:mapleader = " "
-set viminfo+=n~/.config/vim/viminfo
 
 augroup ColorschemeCustom
     au!
@@ -46,7 +45,7 @@ noremap <C-S-Left> <C-W>>
 noremap <C-S-Right> <C-W><
 noremap <C-S-Up> <C-W>+
 noremap <C-S-Down> <C-W>-
-noremap <leader>s "-
+map <leader>s "+
 noremap <leader>r <cmd>registers<cr>
 noremap <leader>ww <cmd>w<cr>
 noremap <leader>wa <cmd>wa<cr>
@@ -68,11 +67,10 @@ set wildmenu completeopt=menuone,popup,fuzzy,longest wildignorecase wildoptions=
 set expandtab tabstop=4 softtabstop=4 shiftwidth=4 shiftround smarttab smartindent autoindent
 set nohlsearch incsearch ignorecase smartcase
 set lazyredraw termguicolors signcolumn=number omnifunc=syntaxcomplete#Complete
-set linebreak scrolloff=10 wrap nostartofline cpoptions+=n nofoldenable foldlevelstart=99 foldmethod=manual showbreak=>>>\
+set linebreak scrolloff=10 wrap nostartofline cpoptions+=n nofoldenable foldlevelstart=99 foldmethod=syntax showbreak=>>>\
 set autoread autowrite backspace=indent,eol,start
-set backupcopy=auto backup writebackup backupdir=~/.cache/vim/backup dir=~/.cache/vim/swap
-set undofile undodir=~/.cache/vim/undo
-set hidden history=1000 sessionoptions-=options sessionoptions-=folds
+set backupcopy=auto backup writebackup undofile
+set hidden history=1000 sessionoptions-=options sessionoptions-=folds viewoptions-=cursor
 set encoding=utf8 ffs=unix,dos,mac nrformats-=octal
 set showmatch matchtime=1 matchpairs+=<:> ttimeoutlen=0 wrapmargin=15
 set spelllang=en_ca,en_us,en_gb spelloptions=camel spellsuggest=best,20 dictionary+=/usr/share/dict/words complete+=k
@@ -81,6 +79,7 @@ set spelllang=en_ca,en_us,en_gb spelloptions=camel spellsuggest=best,20 dictiona
 g:c_no_curly_error = 1 # disable error highlight for c compound literals
 g:ft_man_no_sect_fallback = 1
 g:local_vimrc = {cache_file: $HOME .. "/.cache/vim/local_vimrc_cache"}
+g:vimsyn_folding = "afhHlmpPrt"
 
 var LspServers = [{name: 'clangd',
     filetype: ['c', 'cpp'],
@@ -123,7 +122,24 @@ augroup Custom
             au User LspAttached OnLspAttach()
         augroup END
     }
+    au VimResume * :silent! checktime
+    au VimResized * :wincmd =
+    au VimLeavePre * {
+        if v:this_session != ""
+            execute ':mksession! ' .. v:this_session
+        endif
+    }
+    au BufWinLeave ?* :mkview!
+    au SessionLoadPost * {
+        augroup LoadView
+            au!
+            au BufWinEnter ?* :silent! loadview
+        augroup END
+    }
 augroup END
+
+command! DiffOrig DiffOrig()
+command -nargs=* -complete=file Make make! <args>
 
 def OnLspAttach()
     setlocal tagfunc=lsp#lsp#TagFunc
@@ -154,4 +170,23 @@ enddef
 def Use_q_AsExit()
     nnoremap <nowait> <buffer> q <cmd>quit<cr>
     nnoremap <nowait> <buffer> <C-q> q
+enddef
+
+export def DiffOrig()
+    var prev_file = bufnr()
+    :vertical new
+    var scratch_buf = bufnr()
+    set bt=nofile
+    :execute 'read ++edit ' .. bufname(prev_file)
+    deletebufline(scratch_buf, 1)
+    :diffthis
+    :wincmd p
+    :diffthis
+    g:__diffoff_buf = scratch_buf
+
+    command DiffOff {
+        execute 'bdelete ' .. g:__diffoff_buf
+        unlet g:__diffoff_buf
+        delc DiffOff
+    }
 enddef
