@@ -17,6 +17,18 @@ augroup ColorschemeCustom
     au Colorscheme * {
         :highlight Normal ctermbg=NONE guibg=NONE
         :highlight link Normal NonText
+
+        g:terminal_ansi_colors = [
+                    '#282828', '#CC241D', '#98971A', '#D79921',
+                    '#458588', '#B16286', '#689D6A', '#D65D0E',
+                    '#fb4934', '#b8bb26', '#fabd2f', '#83a598',
+                    '#d3869b', '#8ec07c', '#fe8019', '#FBF1C7' ]
+
+        highlight Terminal guibg='#282828' guifg='#ebdbb2'
+
+        hi Pmenu ctermbg=233 guibg=#171717
+        hi Pmenu ctermbg=233 guibg=#171717
+        hi PmenuSbar ctermbg=233 guibg=#171717
     }
 augroup END
 :colorscheme retrobox
@@ -57,17 +69,23 @@ noremap <leader>cn <cmd>cnext<cr>
 noremap <leader>cp <cmd>cprev<cr>
 noremap <leader>cb <cmd>cabove<cr>
 noremap <leader>cu <cmd>cbelow<cr>
+noremap <leader>v <cmd>silent! loadview<cr>
 inoremap <expr> <CR> pumvisible() ? "\<C-Y>" : "\<CR>"
 inoremap <expr> <C-Y> pumvisible() ? "\<CR>" : "\<C-Y>"
 vnoremap <leader>gr "hy:%s/<C-r>h//gc<left><left><left>
 nnoremap <silent> <F5> <cmd>call <SID>PreciseTrimWhiteSpace()<cr>
+nnoremap <leader>t <cmd>call <SID>AddTermdebug()<cr><cmd>Termdebug<cr>
+noremap ! :!
+noremap <leader><leader> <Cmd>call stargate#OKvim(v:count1)<CR>
+nnoremap <C-w><leader> <Cmd>call stargate#Galaxy()<CR>
+tnoremap <C-w><leader> <Cmd>call stargate#Galaxy()<CR>
 
 set laststatus=2 number relativenumber ruler cursorline showcmd mouse=a title background=dark
 set wildmenu completeopt=menuone,popup,fuzzy,longest wildignorecase wildoptions=pum pumheight=25 keywordprg=:Man
 set expandtab tabstop=4 softtabstop=4 shiftwidth=4 shiftround smarttab smartindent autoindent
 set nohlsearch incsearch ignorecase smartcase
 set lazyredraw termguicolors signcolumn=number omnifunc=syntaxcomplete#Complete
-set linebreak scrolloff=10 wrap nostartofline cpoptions+=n nofoldenable foldlevelstart=99 foldmethod=syntax showbreak=>>>\
+set linebreak scrolloff=10 wrap nostartofline cpoptions+=n nofoldenable foldlevelstart=99 foldmethod=manual showbreak=>>>\ 
 set autoread autowrite backspace=indent,eol,start
 set backupcopy=auto backup writebackup undofile
 set hidden history=1000 sessionoptions-=options sessionoptions-=folds viewoptions-=cursor
@@ -76,10 +94,7 @@ set showmatch matchtime=1 matchpairs+=<:> ttimeoutlen=0 wrapmargin=15
 set spelllang=en_ca,en_us,en_gb spelloptions=camel spellsuggest=best,20 dictionary+=/usr/share/dict/words complete+=k
 &statusline = " %f%m%r%h %w%y %= CWD: %{pathshorten(substitute(getcwd(winnr()),$HOME,'~',''),4)}  (%l,%c) [%p%%,%P]"
 
-g:c_no_curly_error = 1 # disable error highlight for c compound literals
-g:ft_man_no_sect_fallback = 1
 g:local_vimrc = {cache_file: $HOME .. "/.cache/vim/local_vimrc_cache"}
-g:vimsyn_folding = "afhHlmpPrt"
 
 var LspServers = [{name: 'clangd',
     filetype: ['c', 'cpp'],
@@ -94,10 +109,12 @@ var LspServers = [{name: 'clangd',
     ]
 }]
 var LspOptions = {
-    autoComplete: v:false,
-    useBufferCompletion: v:true,
-    filterCompletionDuplicates: v:true,
+    autoComplete: false,
+    useBufferCompletion: true,
+    filterCompletionDuplicates: true,
 }
+g:termdebug_config = { evaluate_in_popup: true, wide: 163, variables_window: true, variables_window_height: 15 }
+
 
 augroup Custom
     au!
@@ -129,12 +146,20 @@ augroup Custom
             execute ':mksession! ' .. v:this_session
         endif
     }
-    au BufWinLeave ?* :mkview!
-    au SessionLoadPost * {
-        augroup LoadView
-            au!
-            au BufWinEnter ?* :silent! loadview
-        augroup END
+    au BufWinLeave ?* :silent! mkview!
+    au User TermdebugStartPre {
+        var nr = bufnr("%")
+        var save_cursor = getcurpos()
+
+        :tabnew
+        execute ":buffer " .. nr
+        setpos('.', save_cursor)
+    }
+    au User TermdebugStartPost {
+        :Source
+    }
+    au User TermdebugStopPost {
+        :tabclose
     }
 augroup END
 
@@ -159,6 +184,7 @@ def OnLspAttach()
     noremap <buffer> <leader>a <cmd>LspCodeAction<cr>
     noremap <buffer> <leader>dd <cmd>LspGotoDeclaration<cr>
     noremap <buffer> <leader>de <cmd>LspGotoDefinition<cr>
+    noremap <buffer> <leader>R <cmd>LspRename<cr>
 enddef
 
 def PreciseTrimWhiteSpace()
@@ -170,6 +196,12 @@ enddef
 def Use_q_AsExit()
     nnoremap <nowait> <buffer> q <cmd>quit<cr>
     nnoremap <nowait> <buffer> <C-q> q
+enddef
+
+def AddTermdebug()
+    if !get(g:, "termdebug_loaded") 
+        packadd termdebug
+    endif
 enddef
 
 export def DiffOrig()

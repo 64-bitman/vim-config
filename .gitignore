@@ -2,3 +2,6 @@
 viminfo
 spell/*
 view/*
+.*
+!.gitignore
+!.gitmodules

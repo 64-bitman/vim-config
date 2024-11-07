@@ -1,12 +1,12 @@
 [submodule "pack/git/opt/lsp"]
 	path = pack/git/opt/lsp
 	url = https://github.com/yegappan/lsp.git
-[submodule "pack/git/opt/vim-markdown"]
-	path = pack/git/opt/vim-markdown
-	url = https://github.com/preservim/vim-markdown.git
 [submodule "pack/git/start/vim-cdroot"]
 	path = pack/git/start/vim-cdroot
 	url = https://github.com/mllg/vim-cdroot.git
 [submodule "pack/git/start/vim-wayland-clipboard"]
 	path = pack/git/start/vim-wayland-clipboard
 	url = https://github.com/jasonccox/vim-wayland-clipboard.git
+[submodule "pack/git/start/vim9-stargate"]
+	path = pack/git/start/vim9-stargate
+	url = https://github.com/monkoose/vim9-stargate.git
