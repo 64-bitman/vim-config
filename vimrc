@@ -18,17 +18,24 @@ augroup ColorschemeCustom
         :highlight Normal ctermbg=NONE guibg=NONE
         :highlight link Normal NonText
 
+        # gruvbox for terminal
         g:terminal_ansi_colors = [
                     '#282828', '#CC241D', '#98971A', '#D79921',
                     '#458588', '#B16286', '#689D6A', '#D65D0E',
                     '#fb4934', '#b8bb26', '#fabd2f', '#83a598',
                     '#d3869b', '#8ec07c', '#fe8019', '#FBF1C7' ]
 
-        highlight Terminal guibg='#282828' guifg='#ebdbb2'
+        highlight Terminal guibg=#282828 guifg=#ebdbb2
 
         hi Pmenu ctermbg=233 guibg=#171717
-        hi Pmenu ctermbg=233 guibg=#171717
-        hi PmenuSbar ctermbg=233 guibg=#171717
+        hi! link PmenuSbar Pmenu
+        hi! link PmenuExtra Pmenu
+        hi PmenuKind ctermbg=233 guibg=#171717
+        hi PmenuMatch ctermbg=233 guibg=#171717
+        hi PmenuSel ctermbg=237 guibg=#212121 ctermfg=109 guifg=#83a598
+        hi PmenuKindSel ctermbg=237 guibg=#212121
+        hi PmenuMatchSel ctermbg=237 guibg=#212121
+        hi! link PmenuExtraSel PmenuSel
     }
 augroup END
 :colorscheme retrobox
