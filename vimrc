@@ -88,7 +88,7 @@ nnoremap <C-w><leader> <Cmd>call stargate#Galaxy()<CR>
 tnoremap <C-w><leader> <Cmd>call stargate#Galaxy()<CR>
 
 set laststatus=2 number relativenumber ruler cursorline showcmd mouse=a title background=dark
-set wildmenu completeopt=menuone,popup,fuzzy,longest wildignorecase wildoptions=pum pumheight=25 keywordprg=:Man
+set wildmenu completeopt=menuone,preview,popup wildignorecase wildoptions=pum pumheight=25 keywordprg=:Man
 set expandtab tabstop=4 softtabstop=4 shiftwidth=4 shiftround smarttab smartindent autoindent
 set nohlsearch incsearch ignorecase smartcase
 set lazyredraw termguicolors signcolumn=number omnifunc=syntaxcomplete#Complete
@@ -117,11 +117,12 @@ var LspServers = [{name: 'clangd',
 }]
 var LspOptions = {
     autoComplete: false,
-    useBufferCompletion: true,
+    omniComplete: true,
+    useBufferCompletion: false,
     filterCompletionDuplicates: true,
 }
 g:termdebug_config = { evaluate_in_popup: true, wide: 163, variables_window: true, variables_window_height: 15 }
-
+g:vim_json_warnings = 0
 
 augroup Custom
     au!
@@ -167,6 +168,21 @@ augroup Custom
     }
     au User TermdebugStopPost {
         :tabclose
+    }
+    # Don't screw up folds when inserting text that might affect them, until
+    # leaving insert mode. Foldmethod is local to the window. Protect against
+    # screwing up folding when switching between windows.
+    autocmd InsertEnter * {
+        if !exists('w:last_fdm') 
+            w:last_fdm = &foldmethod
+            setlocal foldmethod=manual
+        endif
+    }
+    autocmd InsertLeave,WinLeave * {
+        if exists('w:last_fdm') 
+            &l:foldmethod = w:last_fdm 
+            unlet w:last_fdm 
+        endif
     }
 augroup END
 
