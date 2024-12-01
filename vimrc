@@ -7,6 +7,7 @@ vim9script
 :packadd! comment
 :packadd! editorconfig
 :runtime ftplugin/man.vim
+:runtime kitty.vim
 
 filetype plugin indent on
 syntax on
