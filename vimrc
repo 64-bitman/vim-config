@@ -7,7 +7,7 @@ vim9script
 :packadd! comment
 :packadd! editorconfig
 :runtime ftplugin/man.vim
-:runtime kitty.vim
+# :runtime kitty.vim
 
 filetype plugin indent on
 syntax on
@@ -65,7 +65,7 @@ noremap <C-S-Left> <C-W>>
 noremap <C-S-Right> <C-W><
 noremap <C-S-Up> <C-W>+
 noremap <C-S-Down> <C-W>-
-map <leader>s "+
+noremap <leader>s "w
 noremap <leader>r <cmd>registers<cr>
 noremap <leader>ww <cmd>w<cr>
 noremap <leader>wa <cmd>wa<cr>
@@ -100,6 +100,7 @@ set hidden history=1000 sessionoptions-=options sessionoptions-=folds viewoption
 set encoding=utf8 ffs=unix,dos,mac nrformats-=octal
 set showmatch matchtime=1 matchpairs+=<:> ttimeoutlen=0 wrapmargin=15
 set spelllang=en_ca,en_us,en_gb spelloptions=camel spellsuggest=best,20 dictionary+=/usr/share/dict/words complete+=k
+set keyprotocol=kitty:kitty,foot:kitty,ghostty:kitty,wezterm:kitty,xterm:mok2
 &statusline = " %f%m%r%h %w%y %= CWD: %{pathshorten(substitute(getcwd(winnr()),$HOME,'~',''),4)}  (%l,%c) [%p%%,%P]"
 
 g:local_vimrc = {cache_file: $HOME .. "/.cache/vim/local_vimrc_cache"}
@@ -124,6 +125,7 @@ var LspOptions = {
 }
 g:termdebug_config = { evaluate_in_popup: true, wide: 163, variables_window: true, variables_window_height: 15 }
 g:vim_json_warnings = 0
+g:oscyank_silent = true
 
 augroup Custom
     au!
@@ -170,19 +172,9 @@ augroup Custom
     au User TermdebugStopPost {
         :tabclose
     }
-    # Don't screw up folds when inserting text that might affect them, until
-    # leaving insert mode. Foldmethod is local to the window. Protect against
-    # screwing up folding when switching between windows.
-    autocmd InsertEnter * {
-        if !exists('w:last_fdm') 
-            w:last_fdm = &foldmethod
-            setlocal foldmethod=manual
-        endif
-    }
-    autocmd InsertLeave,WinLeave * {
-        if exists('w:last_fdm') 
-            &l:foldmethod = w:last_fdm 
-            unlet w:last_fdm 
+    au TextYankPost * {
+        if v:event.regname ==# "w"
+            :call OSCYankRegister(v:event.regname)
         endif
     }
 augroup END
