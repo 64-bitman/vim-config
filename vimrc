@@ -7,7 +7,6 @@ vim9script
 :packadd! comment
 :packadd! editorconfig
 :runtime ftplugin/man.vim
-# :runtime kitty.vim
 
 filetype plugin indent on
 syntax on
@@ -88,7 +87,7 @@ noremap <leader><leader> <Cmd>call stargate#OKvim(v:count1)<CR>
 nnoremap <C-w><leader> <Cmd>call stargate#Galaxy()<CR>
 tnoremap <C-w><leader> <Cmd>call stargate#Galaxy()<CR>
 
-set laststatus=2 number relativenumber ruler cursorline showcmd mouse=a title background=dark
+set laststatus=2 number relativenumber ruler cursorline showcmd mouse=a ttymouse=sgr title background=dark
 set wildmenu completeopt=menuone,preview,popup wildignorecase wildoptions=pum pumheight=25 keywordprg=:Man
 set expandtab tabstop=4 softtabstop=4 shiftwidth=4 shiftround smarttab smartindent autoindent
 set nohlsearch incsearch ignorecase smartcase
@@ -96,8 +95,8 @@ set lazyredraw termguicolors signcolumn=number omnifunc=syntaxcomplete#Complete
 set linebreak scrolloff=10 wrap nostartofline cpoptions+=n nofoldenable foldlevelstart=99 foldmethod=manual showbreak=>>>\ 
 set autoread autowrite backspace=indent,eol,start
 set backupcopy=auto backup writebackup undofile
-set hidden history=1000 sessionoptions-=options sessionoptions-=folds viewoptions-=cursor
-set encoding=utf8 ffs=unix,dos,mac nrformats-=octal
+set nohidden history=1000 sessionoptions-=options sessionoptions-=folds viewoptions-=cursor
+set encoding=utf8 ffs=unix,dos,mac
 set showmatch matchtime=1 matchpairs+=<:> ttimeoutlen=0 wrapmargin=15
 set spelllang=en_ca,en_us,en_gb spelloptions=camel spellsuggest=best,20 dictionary+=/usr/share/dict/words complete+=k
 set keyprotocol=kitty:kitty,foot:kitty,ghostty:kitty,wezterm:kitty,xterm:mok2
@@ -114,7 +113,8 @@ var LspServers = [{name: 'clangd',
         '--pch-storage=memory',
         '--malloc-trim',
         '--background-index-priority=background',
-        '--completion-style=detailed'
+        '--completion-style=detailed',
+        '--header-insertion=never'
     ]
 }]
 var LspOptions = {
