@@ -99,7 +99,6 @@ set nohidden history=1000 sessionoptions-=options sessionoptions-=folds viewopti
 set encoding=utf8 ffs=unix,dos,mac
 set showmatch matchtime=1 matchpairs+=<:> ttimeoutlen=0 wrapmargin=15
 set spelllang=en_ca,en_us,en_gb spelloptions=camel spellsuggest=best,20 dictionary+=/usr/share/dict/words complete+=k
-set keyprotocol=kitty:kitty,foot:kitty,ghostty:kitty,wezterm:kitty,xterm:mok2
 &statusline = " %f%m%r%h %w%y %= CWD: %{pathshorten(substitute(getcwd(winnr()),$HOME,'~',''),4)}  (%l,%c) [%p%%,%P]"
 
 g:local_vimrc = {cache_file: $HOME .. "/.cache/vim/local_vimrc_cache"}
@@ -201,6 +200,9 @@ def OnLspAttach()
     noremap <buffer> <leader>dd <cmd>LspGotoDeclaration<cr>
     noremap <buffer> <leader>de <cmd>LspGotoDefinition<cr>
     noremap <buffer> <leader>R <cmd>LspRename<cr>
+    noremap <buffer> <leader>p <cmd>LspDiagPrev<cr>
+    noremap <buffer> <leader>n <cmd>LspDiagNext<cr>
+    noremap <buffer> <leader>L <cmd>LspDiagShow<cr>
 enddef
 
 def PreciseTrimWhiteSpace()
