@@ -200,8 +200,8 @@ def OnLspAttach()
     noremap <buffer> <leader>dd <cmd>LspGotoDeclaration<cr>
     noremap <buffer> <leader>de <cmd>LspGotoDefinition<cr>
     noremap <buffer> <leader>R <cmd>LspRename<cr>
-    noremap <buffer> <leader>p <cmd>LspDiagPrev<cr>
-    noremap <buffer> <leader>n <cmd>LspDiagNext<cr>
+    noremap <buffer> <leader>dp <cmd>LspDiagPrev<cr>
+    noremap <buffer> <leader>dn <cmd>LspDiagNext<cr>
     noremap <buffer> <leader>L <cmd>LspDiagShow<cr>
 enddef
 
