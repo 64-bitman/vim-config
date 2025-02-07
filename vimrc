@@ -56,7 +56,7 @@ noremap j gj
 noremap k gk
 noremap gj j
 noremap gk k
-noremap <leader>f <cmd>FZF<cr>
+noremap <leader>f <cmd>w<cr><cmd>FZF<cr>
 tnoremap <C-n> <C-\><C-n>
 noremap <leader>q <cmd>stop<cr>
 noremap <leader>e <cmd>wqa<cr>
@@ -100,8 +100,6 @@ set encoding=utf8 ffs=unix,dos,mac
 set showmatch matchtime=1 matchpairs+=<:> ttimeoutlen=0 wrapmargin=15
 set spelllang=en_ca,en_us,en_gb spelloptions=camel spellsuggest=best,20 dictionary+=/usr/share/dict/words complete+=k
 &statusline = " %f%m%r%h %w%y %= CWD: %{pathshorten(substitute(getcwd(winnr()),$HOME,'~',''),4)}  (%l,%c) [%p%%,%P]"
-
-g:local_vimrc = {cache_file: $HOME .. "/.cache/vim/local_vimrc_cache"}
 
 var LspServers = [{name: 'clangd',
     filetype: ['c', 'cpp'],
