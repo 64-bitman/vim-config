@@ -99,6 +99,7 @@ set nohidden history=1000 sessionoptions-=options sessionoptions-=folds viewopti
 set encoding=utf8 ffs=unix,dos,mac
 set showmatch matchtime=1 matchpairs+=<:> ttimeoutlen=0 wrapmargin=15
 set spelllang=en_ca,en_us,en_gb spelloptions=camel spellsuggest=best,20 dictionary+=/usr/share/dict/words complete+=k
+set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case grepformat+=%f:%l:%c:%m
 &statusline = " %f%m%r%h %w%y %= CWD: %{pathshorten(substitute(getcwd(winnr()),$HOME,'~',''),4)}  (%l,%c) [%p%%,%P]"
 
 var LspServers = [{name: 'clangd',
