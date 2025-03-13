@@ -127,7 +127,12 @@ g:oscyank_silent = true
 
 augroup Custom
     au!
-    au FileType * setlocal formatoptions+=j formatoptions-=cro
+    au FileType * {
+        setlocal formatoptions+=j formatoptions-=cro
+        if &makeprg == "make"
+            setlocal makeprg=make\ -j12
+        endif
+    }
     autocmd BufRead,BufNewFile *.h setlocal filetype=c
     au FileType qf Use_q_AsExit()
     au CmdWinEnter * Use_q_AsExit()
