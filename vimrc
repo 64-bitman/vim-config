@@ -56,16 +56,20 @@ noremap j gj
 noremap k gk
 noremap gj j
 noremap gk k
-noremap <leader>f <cmd>w<cr><cmd>FZF<cr>
+noremap <leader>f <cmd>silent! w<cr><cmd>FZF<cr>
 tnoremap <C-n> <C-\><C-n>
 noremap <leader>q <cmd>stop<cr>
 noremap <leader>e <cmd>wqa<cr>
+noremap <leader>c <cmd>wqa<cr>
 noremap <C-S-Left> <C-W>>
 noremap <C-S-Right> <C-W><
 noremap <C-S-Up> <C-W>+
 noremap <C-S-Down> <C-W>-
 noremap <leader>s "w
 noremap <leader>r <cmd>registers<cr>
+noremap <leader>jh <cmd>jumps<cr>
+noremap <leader>jt <cmd>tags<cr>
+noremap <leader>jj :tag<Space>
 noremap <leader>ww <cmd>w<cr>
 noremap <leader>wa <cmd>wa<cr>
 noremap <leader>co <cmd>copen<cr>
@@ -74,14 +78,27 @@ noremap <leader>cc <cmd>cclose<cr>
 noremap <leader>cl <cmd>cc<cr>
 noremap <leader>cn <cmd>cnext<cr>
 noremap <leader>cp <cmd>cprev<cr>
-noremap <leader>cb <cmd>cabove<cr>
-noremap <leader>cu <cmd>cbelow<cr>
+noremap <leader>ca <cmd>cabove<cr>
+noremap <leader>cb <cmd>cbelow<cr>
+noremap <leader>ce <cmd>cnewer<cr>
+noremap <leader>co <cmd>colder<cr>
+noremap <leader>lo <cmd>lopen<cr>
+noremap <leader>lw <cmd>lwindow<cr>
+noremap <leader>lc <cmd>lclose<cr>
+noremap <leader>ll <cmd>ll<cr>
+noremap <leader>ln <cmd>lnext<cr>
+noremap <leader>lp <cmd>lprev<cr>
+noremap <leader>la <cmd>labove<cr>
+noremap <leader>lb <cmd>lbelow<cr>
+noremap <leader>le <cmd>lnewer<cr>
+noremap <leader>lo <cmd>lolder<cr>
 noremap <leader>v <cmd>silent! loadview<cr>
 inoremap <expr> <CR> pumvisible() ? "\<C-Y>" : "\<CR>"
 inoremap <expr> <C-Y> pumvisible() ? "\<CR>" : "\<C-Y>"
 vnoremap <leader>gr "hy:%s/<C-r>h//gc<left><left><left>
 nnoremap <silent> <F5> <cmd>call <SID>PreciseTrimWhiteSpace()<cr>
-nnoremap <leader>t <cmd>call <SID>AddTermdebug()<cr><cmd>Termdebug<cr>
+nnoremap <leader>tt <cmd>call <SID>AddTermdebug()<cr><cmd>Termdebug<cr>
+nnoremap <leader>c <cmd>doautocmd User LspAttached<cr>
 noremap ! :!
 noremap <leader><leader> <Cmd>call stargate#OKvim(v:count1)<CR>
 nnoremap <C-w><leader> <Cmd>call stargate#Galaxy()<CR>
@@ -110,7 +127,7 @@ var LspServers = [{name: 'clangd',
         '--clang-tidy',
         '--pch-storage=memory',
         '--malloc-trim',
-        '--background-index-priority=background',
+        '--background-index-priority=normal',
         '--completion-style=detailed',
         '--header-insertion=never'
     ]
@@ -120,6 +137,8 @@ var LspOptions = {
     omniComplete: true,
     useBufferCompletion: false,
     filterCompletionDuplicates: true,
+    showSignature: true,
+    # useQuickfixForLocations: true
 }
 g:termdebug_config = { evaluate_in_popup: true, wide: 163, variables_window: true, variables_window_height: 15 }
 g:vim_json_warnings = 0
@@ -164,6 +183,7 @@ augroup Custom
     au User TermdebugStartPre {
         var nr = bufnr("%")
         var save_cursor = getcurpos()
+        g:termdebug_lasttab = tabpagenr()
 
         :tabnew
         execute ":buffer " .. nr
@@ -171,9 +191,17 @@ augroup Custom
     }
     au User TermdebugStartPost {
         :Source
+        noremap <leader>tb <cmd>Break<cr>
+        noremap <leader>tr <cmd>Clear<cr>
+        noremap <leader>ts <cmd>Step<cr>
+        noremap <leader>tn <cmd>Over<cr>
+        noremap <leader>to <cmd>Finish<cr>
     }
     au User TermdebugStopPost {
         :tabclose
+        if exists("g:termdebug_lasttab")
+            execute("tabn " .. g:termdebug_lasttab)
+        endif
     }
     au TextYankPost * {
         if v:event.regname ==# "w"
@@ -203,10 +231,12 @@ def OnLspAttach()
     noremap <buffer> <leader>a <cmd>LspCodeAction<cr>
     noremap <buffer> <leader>dd <cmd>LspGotoDeclaration<cr>
     noremap <buffer> <leader>de <cmd>LspGotoDefinition<cr>
+    noremap <buffer> <leader>sr <cmd>LspShowReferences<cr>
     noremap <buffer> <leader>R <cmd>LspRename<cr>
     noremap <buffer> <leader>dp <cmd>LspDiagPrev<cr>
     noremap <buffer> <leader>dn <cmd>LspDiagNext<cr>
     noremap <buffer> <leader>L <cmd>LspDiagShow<cr>
+    :helptags ALL
 enddef
 
 def PreciseTrimWhiteSpace()
