@@ -8,6 +8,10 @@ vim9script
 :packadd! editorconfig
 :runtime ftplugin/man.vim
 
+if &term == "xterm-kitty"
+    runtime kitty.vim
+endif
+
 filetype plugin indent on
 syntax on
 g:mapleader = " "
@@ -207,6 +211,10 @@ augroup Custom
         if v:event.regname ==# "w"
             :call OSCYankRegister(v:event.regname)
         endif
+    }
+    au FocusLost * {
+        :silent! checktime
+        :wa
     }
 augroup END
 
