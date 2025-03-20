@@ -6,6 +6,7 @@ vim9script
 
 :packadd! comment
 :packadd! editorconfig
+:packadd! hlyank
 :runtime ftplugin/man.vim
 
 if &term == "xterm-kitty"
