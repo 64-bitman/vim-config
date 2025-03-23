@@ -65,7 +65,6 @@ noremap <leader>f <cmd>silent! w<cr><cmd>FZF<cr>
 tnoremap <C-n> <C-\><C-n>
 noremap <leader>q <cmd>stop<cr>
 noremap <leader>e <cmd>wqa<cr>
-noremap <leader>c <cmd>wqa<cr>
 noremap <C-S-Left> <C-W>>
 noremap <C-S-Right> <C-W><
 noremap <C-S-Up> <C-W>+
@@ -97,6 +96,7 @@ noremap <leader>la <cmd>labove<cr>
 noremap <leader>lb <cmd>lbelow<cr>
 noremap <leader>le <cmd>lnewer<cr>
 noremap <leader>lo <cmd>lolder<cr>
+noremap <leader>c <cmd>lolder<cr>
 noremap <leader>v <cmd>silent! loadview<cr>
 inoremap <expr> <CR> pumvisible() ? "\<C-Y>" : "\<CR>"
 inoremap <expr> <C-Y> pumvisible() ? "\<CR>" : "\<C-Y>"
@@ -104,6 +104,8 @@ vnoremap <leader>gr "hy:%s/<C-r>h//gc<left><left><left>
 nnoremap <silent> <F5> <cmd>call <SID>PreciseTrimWhiteSpace()<cr>
 nnoremap <leader>tt <cmd>call <SID>AddTermdebug()<cr><cmd>Termdebug<cr>
 nnoremap <leader>c <cmd>doautocmd User LspAttached<cr>
+nnoremap <leader>be <cmd>syntax on<cr>
+nnoremap <leader>bd <cmd>syntax off<cr>
 noremap ! :!
 noremap <leader><leader> <Cmd>call stargate#OKvim(v:count1)<CR>
 nnoremap <C-w><leader> <Cmd>call stargate#Galaxy()<CR>
@@ -216,6 +218,11 @@ augroup Custom
     au FocusLost * {
         :silent! checktime
         :wa
+    }
+    autocmd BufWinEnter * {
+        if line2byte(line("$") + 1) > 100000
+            colorscheme distilled
+        endif
     }
 augroup END
 
