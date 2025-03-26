@@ -45,9 +45,9 @@ augroup ColorschemeCustom
 augroup END
 :colorscheme retrobox
 
-nnoremap <leader>l <C-^>
-nnoremap <leader>n <cmd>bn<cr>
-nnoremap <leader>p <cmd>bp<cr>
+nnoremap <leader>p <C-^>
+nnoremap <leader>bn <cmd>bn<cr>
+nnoremap <leader>bp <cmd>bp<cr>
 nnoremap <leader>o o<esc>
 nnoremap <leader>O O<esc>
 nnoremap <leader>m <cmd>ls<CR>:b<Space>
@@ -218,11 +218,6 @@ augroup Custom
     au FocusLost * {
         :silent! checktime
         :wa
-    }
-    autocmd BufWinEnter * {
-        if line2byte(line("$") + 1) > 100000
-            colorscheme distilled
-        endif
     }
 augroup END
 
