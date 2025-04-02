@@ -109,6 +109,8 @@ noremap ! :!
 noremap <leader><leader> <Cmd>call stargate#OKvim(v:count1)<CR>
 nnoremap <C-w><leader> <Cmd>call stargate#Galaxy()<CR>
 tnoremap <C-w><leader> <Cmd>call stargate#Galaxy()<CR>
+nnoremap <leader>uu <cmd>UndotreeToggle<CR>
+nnoremap <leader>uf <cmd>UndotreeFocus<CR>
 
 set laststatus=2 number relativenumber ruler cursorline showcmd mouse=a ttymouse=sgr title background=dark
 set wildmenu completeopt=menuone,preview,popup wildignorecase wildoptions=pum pumheight=25 keywordprg=:Man
