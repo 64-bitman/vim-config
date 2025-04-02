@@ -69,7 +69,6 @@ noremap <C-S-Left> <C-W>>
 noremap <C-S-Right> <C-W><
 noremap <C-S-Up> <C-W>+
 noremap <C-S-Down> <C-W>-
-noremap <leader>s "w
 noremap <leader>r <cmd>registers<cr>
 noremap <leader>jh <cmd>jumps<cr>
 noremap <leader>jt <cmd>tags<cr>
@@ -116,7 +115,7 @@ set wildmenu completeopt=menuone,preview,popup wildignorecase wildoptions=pum pu
 set expandtab tabstop=4 softtabstop=4 shiftwidth=4 shiftround smarttab smartindent autoindent
 set nohlsearch incsearch ignorecase smartcase
 set lazyredraw termguicolors signcolumn=number omnifunc=syntaxcomplete#Complete
-set linebreak scrolloff=10 wrap nostartofline cpoptions+=n nofoldenable foldlevelstart=99 foldmethod=manual showbreak=>>>\ 
+set linebreak scrolloff=10 wrap nostartofline cpoptions+=n nofoldenable foldlevelstart=99 foldmethod=indent showbreak=>>>\ 
 set autoread autowrite backspace=indent,eol,start
 set backupcopy=auto backup writebackup undofile
 set nohidden history=1000 sessionoptions-=options sessionoptions-=folds viewoptions-=cursor
@@ -145,7 +144,6 @@ var LspOptions = {
     useBufferCompletion: false,
     filterCompletionDuplicates: true,
     showSignature: true,
-    # useQuickfixForLocations: true
 }
 g:termdebug_config = { evaluate_in_popup: true, wide: 163, variables_window: true, variables_window_height: 15 }
 g:vim_json_warnings = 0
@@ -209,6 +207,12 @@ augroup Custom
         if exists("g:termdebug_lasttab")
             execute("tabn " .. g:termdebug_lasttab)
         endif
+
+        unmap <leader>tb
+        unmap <leader>tr
+        unmap <leader>ts
+        unmap <leader>tn
+        unmap <leader>to
     }
     au TextYankPost * {
         if v:event.regname ==# "w"
@@ -228,9 +232,9 @@ def OnLspAttach()
     setlocal tagfunc=lsp#lsp#TagFunc
     augroup LspCustom
         au!
-        au BufWritePre <buffer> {
-            :execute "LspFormat"
-        }
+        # au BufWritePre <buffer> {
+        #     :execute "LspFormat"
+        # }
     augroup END
 
     noremap <buffer> <leader>g <cmd>LspDiag current<cr>

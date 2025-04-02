@@ -13,3 +13,6 @@
 [submodule "pack/git/start/vim-c-cpp-modern"]
 	path = pack/git/start/vim-c-cpp-modern
 	url = https://github.com/bfrg/vim-c-cpp-modern.git
+[submodule "pack/git/start/undotree"]
+	path = pack/git/start/undotree
+	url = https://github.com/mbbill/undotree.git
