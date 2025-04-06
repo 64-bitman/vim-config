@@ -165,8 +165,8 @@ var LspServers = [
 ]
 
 var LspOptions = {
-    autoComplete: false,
-    omniComplete: true,
+    autoComplete: true,
+    omniComplete: false,
     showInlayHints: false,
     useBufferCompletion: false,
     filterCompletionDuplicates: true,
