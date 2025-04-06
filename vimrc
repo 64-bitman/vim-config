@@ -103,9 +103,6 @@ nnoremap <leader>ls <cmd>doautocmd User LspAttached<cr>
 nnoremap <leader>be <cmd>syntax on<cr>
 nnoremap <leader>bd <cmd>syntax off<cr>
 noremap ! :!
-noremap <leader><leader> <Cmd>call stargate#OKvim(v:count1)<CR>
-nnoremap <C-w><leader> <Cmd>call stargate#Galaxy()<CR>
-tnoremap <C-w><leader> <Cmd>call stargate#Galaxy()<CR>
 nnoremap <leader>uu <cmd>UndotreeToggle<CR>
 nnoremap <leader>uf <cmd>UndotreeFocus<CR>
 
