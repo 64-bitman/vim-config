@@ -83,8 +83,6 @@ noremap <leader>cn <cmd>cnext<cr>
 noremap <leader>cp <cmd>cprev<cr>
 noremap <leader>ca <cmd>cabove<cr>
 noremap <leader>cb <cmd>cbelow<cr>
-noremap <leader>ce <cmd>cnewer<cr>
-noremap <leader>co <cmd>colder<cr>
 noremap <leader>lo <cmd>lopen<cr>
 noremap <leader>lw <cmd>lwindow<cr>
 noremap <leader>lc <cmd>lclose<cr>
@@ -95,14 +93,13 @@ noremap <leader>la <cmd>labove<cr>
 noremap <leader>lb <cmd>lbelow<cr>
 noremap <leader>le <cmd>lnewer<cr>
 noremap <leader>lo <cmd>lolder<cr>
-noremap <leader>c <cmd>lolder<cr>
 noremap <leader>v <cmd>silent! loadview<cr>
 inoremap <expr> <CR> pumvisible() ? "\<C-Y>" : "\<CR>"
 inoremap <expr> <C-Y> pumvisible() ? "\<CR>" : "\<C-Y>"
 vnoremap <leader>gr "hy:%s/<C-r>h//gc<left><left><left>
 nnoremap <silent> <F5> <cmd>call <SID>PreciseTrimWhiteSpace()<cr>
 nnoremap <leader>tt <cmd>call <SID>AddTermdebug()<cr><cmd>Termdebug<cr>
-nnoremap <leader>c <cmd>doautocmd User LspAttached<cr>
+nnoremap <leader>ls <cmd>doautocmd User LspAttached<cr>
 nnoremap <leader>be <cmd>syntax on<cr>
 nnoremap <leader>bd <cmd>syntax off<cr>
 noremap ! :!
@@ -127,25 +124,55 @@ set spelllang=en_ca,en_us,en_gb spelloptions=camel spellsuggest=best,20 dictiona
 set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case grepformat+=%f:%l:%c:%m
 &statusline = " %f%m%r%h %w%y %= CWD: %{pathshorten(substitute(getcwd(winnr()),$HOME,'~',''),4)}  (%l,%c) [%p%%,%P]"
 
-var LspServers = [{name: 'clangd',
-    filetype: ['c', 'cpp'],
-    path: '/bin/clangd',
-    args: [
-        '--background-index',
-        '--clang-tidy',
-        '--pch-storage=memory',
-        '--malloc-trim',
-        '--background-index-priority=normal',
-        '--completion-style=detailed',
-        '--header-insertion=never'
-    ]
-}]
+var LspServers = [
+    {
+        name: 'clangd',
+        filetype: ['c', 'cpp'],
+        path: '/usr/bin/clangd',
+        args: [
+            '--background-index',
+            '--clang-tidy',
+            '--pch-storage=memory',
+            '--malloc-trim',
+            '--background-index-priority=normal',
+            '--completion-style=detailed',
+            '--header-insertion=never'
+        ]
+    },
+    {
+        name: 'pyright',
+        filetype: ['python'],
+        path: '/usr/bin/pyright-langserver',
+        args: ['--stdio'],
+        workspaceConfig: {
+            python: {
+                pythonPath: '/usr/bin/python'
+            }
+        }
+    },
+    {
+        name: 'bashls',
+        filetype: 'sh',
+        path: '/usr/bin/bash-language-server',
+        args: ['start']
+    },
+    {
+        name: 'vscode-json-server',
+        filetype: ['json', 'jsonc'],
+        path: '/usr/bin/vscode-json-language-server',
+        args: ['--stdio'],
+    },
+]
+
 var LspOptions = {
     autoComplete: false,
     omniComplete: true,
+    showInlayHints: false,
     useBufferCompletion: false,
     filterCompletionDuplicates: true,
     showSignature: true,
+    snippetSupport: true,
+    vsnipSupport: true,
 }
 g:termdebug_config = { evaluate_in_popup: true, wide: 163, variables_window: true, variables_window_height: 15 }
 g:vim_json_warnings = 0
@@ -162,6 +189,12 @@ augroup Custom
     autocmd BufRead,BufNewFile *.h setlocal filetype=c
     au FileType qf Use_q_AsExit()
     au CmdWinEnter * Use_q_AsExit()
+    au User CdRootChange {
+        if b:root_marker == ".git" || b:root_marker == ".projectroot_git"
+            :packadd vim-fugitive
+            :helptags ALL
+        endif
+    }
     au BufReadPost * {
         var line = line("'\"")
         if line >= 1 && line <= line("$") && &filetype !~# 'commit'
@@ -169,8 +202,14 @@ augroup Custom
             :execute "normal! g`\""
         endif
     }
-    au Filetype c,cpp ++once {
+    au Filetype c,cpp,python,sh,json,jsonc ++once {
         :packadd lsp
+        :helptags ALL
+    }
+    au User LspSetup {
+        :packadd vim-vsnip
+        :packadd vim-vsnip-integ
+        :helptags ALL
 
         call LspOptionsSet(LspOptions)
         call LspAddServer(LspServers)
@@ -227,17 +266,12 @@ augroup Custom
     }
 augroup END
 
+command! Glow Glow()
 command! DiffOrig DiffOrig()
 command -nargs=* -complete=file Make make! <args>
 
 def OnLspAttach()
     setlocal tagfunc=lsp#lsp#TagFunc
-    augroup LspCustom
-        au!
-        # au BufWritePre <buffer> {
-        #     :execute "LspFormat"
-        # }
-    augroup END
 
     noremap <buffer> <leader>g <cmd>LspDiag current<cr>
     noremap <buffer> <leader>= <cmd>LspFormat<cr>
@@ -253,7 +287,16 @@ def OnLspAttach()
     noremap <buffer> <leader>dp <cmd>LspDiagPrev<cr>
     noremap <buffer> <leader>dn <cmd>LspDiagNext<cr>
     noremap <buffer> <leader>L <cmd>LspDiagShow<cr>
-    :helptags ALL
+
+    SetupVsnip()
+enddef
+
+def SetupVsnip()
+    # Jump forward or backward
+    imap <buffer> <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
+    smap <buffer> <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
+    imap <buffer> <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
+    smap <buffer> <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
 enddef
 
 def PreciseTrimWhiteSpace()
@@ -271,6 +314,11 @@ def AddTermdebug()
     if !get(g:, "termdebug_loaded") 
         packadd termdebug
     endif
+enddef
+
+def Glow()
+    :silent! !glow %:p
+    :redraw!
 enddef
 
 export def DiffOrig()
