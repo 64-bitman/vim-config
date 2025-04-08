@@ -125,7 +125,7 @@ var LspServers = [
     {
         name: 'clangd',
         filetype: ['c', 'cpp'],
-        path: '/usr/bin/clangd',
+        path: 'clangd',
         args: [
             '--background-index',
             '--clang-tidy',
@@ -139,7 +139,7 @@ var LspServers = [
     {
         name: 'pyright',
         filetype: ['python'],
-        path: '/usr/bin/pyright-langserver',
+        path: 'pyright-langserver',
         args: ['--stdio'],
         workspaceConfig: {
             python: {
@@ -150,13 +150,13 @@ var LspServers = [
     {
         name: 'bashls',
         filetype: 'sh',
-        path: '/usr/bin/bash-language-server',
+        path: 'bash-language-server',
         args: ['start']
     },
     {
         name: 'vscode-json-server',
         filetype: ['json', 'jsonc'],
-        path: '/usr/bin/vscode-json-language-server',
+        path: 'vscode-json-language-server',
         args: ['--stdio'],
     },
 ]
