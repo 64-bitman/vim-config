@@ -1,6 +1,3 @@
-[submodule "pack/git/start/vim-oscyank"]
-	path = pack/git/start/vim-oscyank
-	url = https://github.com/ojroques/vim-oscyank.git
 [submodule "pack/git/opt/lsp"]
 	path = pack/git/opt/lsp
 	url = git@github.com:64-bitman/lsp.git
