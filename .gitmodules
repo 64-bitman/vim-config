@@ -16,3 +16,6 @@
 [submodule "pack/git/opt/vim-fugitive"]
 	path = pack/git/opt/vim-fugitive
 	url = https://github.com/tpope/vim-fugitive.git
+[submodule "pack/git/start/vim-oscyank"]
+	path = pack/git/start/vim-oscyank
+	url = https://github.com/ojroques/vim-oscyank.git
