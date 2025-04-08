@@ -1,6 +1,3 @@
-[submodule "pack/git/start/vim-cdroot"]
-	path = pack/git/start/vim-cdroot
-	url = https://github.com/mllg/vim-cdroot.git
 [submodule "pack/git/start/vim-oscyank"]
 	path = pack/git/start/vim-oscyank
 	url = https://github.com/ojroques/vim-oscyank.git
