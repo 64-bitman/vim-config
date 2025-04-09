@@ -19,6 +19,3 @@
 [submodule "pack/git/start/vim-oscyank"]
 	path = pack/git/start/vim-oscyank
 	url = https://github.com/ojroques/vim-oscyank.git
-[submodule "pack/git/start/conflict-marker.vim"]
-	path = pack/git/start/conflict-marker.vim
-	url = https://github.com/rhysd/conflict-marker.vim.git
