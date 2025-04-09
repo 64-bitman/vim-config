@@ -20,7 +20,6 @@ g:mapleader = " "
 augroup ColorschemeCustom
     au!
     au Colorscheme * {
-        :highlight Normal ctermbg=NONE guibg=NONE
         :highlight link Normal NonText
 
         # gruvbox for terminal
