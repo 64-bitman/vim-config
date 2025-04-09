@@ -40,6 +40,10 @@ augroup ColorschemeCustom
         hi PmenuKindSel ctermbg=237 guibg=#212121
         hi PmenuMatchSel ctermbg=237 guibg=#212121
         hi! link PmenuExtraSel PmenuSel
+
+        highlight ConflictMarkerOurs guibg=#2e5049
+        highlight ConflictMarkerTheirs guibg=#344f69
+        highlight ConflictMarkerCommonAncestorsHunk guibg=#754a81
     }
 augroup END
 :colorscheme retrobox
@@ -264,6 +268,7 @@ augroup END
 
 command! Glow Glow()
 command! DiffOrig DiffOrig()
+command! SynStack SynStack()
 command -nargs=* -complete=file Make make! <args>
 
 def OnLspAttach()
@@ -334,4 +339,11 @@ export def DiffOrig()
         unlet g:__diffoff_buf
         delc DiffOff
     }
+enddef
+
+def SynStack()
+  if !exists("*synstack")
+    return
+  endif
+  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 enddef
