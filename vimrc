@@ -270,7 +270,7 @@ def OnLspAttach()
     setlocal tagfunc=lsp#lsp#TagFunc
 
     noremap <buffer> <leader>g <cmd>LspDiag current<cr>
-    noremap <buffer> <leader>= <cmd>LspFormat<cr>
+    noremap <buffer> <leader>= :LspFormat<cr>
     noremap <buffer> <leader>i <cmd>LspHover<cr>
     noremap <buffer> <leader>sh <cmd>LspSwitchSourceHeader<cr>
     noremap <buffer> <leader>hh <cmd>LspHighlight<cr>
