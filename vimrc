@@ -7,6 +7,10 @@ vim9script
 :packadd! comment
 :packadd! editorconfig
 :packadd! hlyank
+:packadd! helptoc
+:packadd! justify
+:packadd! cfilter
+:packadd! matchit
 :runtime ftplugin/man.vim
 
 if &term == "xterm-kitty"
@@ -72,6 +76,7 @@ noremap <C-S-Left> <C-W>>
 noremap <C-S-Right> <C-W><
 noremap <C-S-Up> <C-W>+
 noremap <C-S-Down> <C-W>-
+noremap <leader>h <cmd>HelpToc<cr>
 noremap <leader>r <cmd>registers<cr>
 noremap <leader>jh <cmd>jumps<cr>
 noremap <leader>jt <cmd>tags<cr>
@@ -105,7 +110,6 @@ nnoremap <leader>tt <cmd>call <SID>AddTermdebug()<cr><cmd>Termdebug<cr>
 nnoremap <leader>ls <cmd>doautocmd User LspAttached<cr>
 nnoremap <leader>be <cmd>syntax on<cr>
 nnoremap <leader>bd <cmd>syntax off<cr>
-noremap ! :!
 nnoremap <leader>uu <cmd>UndotreeToggle<CR>
 nnoremap <leader>uf <cmd>UndotreeFocus<CR>
 
@@ -114,10 +118,10 @@ set wildmenu completeopt=menuone,preview,popup wildignorecase wildoptions=pum pu
 set expandtab tabstop=4 softtabstop=4 shiftwidth=4 shiftround smarttab smartindent autoindent
 set nohlsearch incsearch ignorecase smartcase
 set lazyredraw termguicolors signcolumn=number omnifunc=syntaxcomplete#Complete
-set linebreak scrolloff=10 wrap nostartofline cpoptions+=n nofoldenable foldlevelstart=99 foldmethod=indent showbreak=>>>\ 
+set linebreak scrolloff=10 wrap nostartofline cpoptions+=n nofoldenable foldlevelstart=99 foldmethod=indent showbreak=>>>\
 set autoread autowrite backspace=indent,eol,start
 set backupcopy=auto backup writebackup undofile
-set nohidden history=1000 sessionoptions-=options sessionoptions-=folds viewoptions-=cursor
+set nohidden history=1000 sessionoptions-=options sessionoptions-=folds viewoptions-=cursor diffopt+=vertical
 set encoding=utf8 ffs=unix,dos,mac
 set showmatch matchtime=1 matchpairs+=<:> ttimeoutlen=0 wrapmargin=15
 set spelllang=en_ca,en_us,en_gb spelloptions=camel spellsuggest=best,20 dictionary+=/usr/share/dict/words complete+=k
@@ -190,9 +194,13 @@ augroup Custom
     au FileType qf Use_q_AsExit()
     au CmdWinEnter * Use_q_AsExit()
     au User CdRootChange {
-        if b:root_marker == ".git" || b:root_marker == ".projectroot_git"
-            :packadd vim-fugitive
-            :helptags ALL
+        if !exists("g:_cdroot")
+            if b:root_marker == ".git" || b:root_marker == ".projectroot_git"
+                g:_cdroot = true
+                :packadd vim-fugitive
+                :packadd conflict-marker.vim
+                :helptags ALL
+            endif
         endif
     }
     au BufReadPost * {
@@ -312,7 +320,7 @@ def Use_q_AsExit()
 enddef
 
 def AddTermdebug()
-    if !get(g:, "termdebug_loaded") 
+    if !get(g:, "termdebug_loaded")
         packadd termdebug
     endif
 enddef
@@ -324,9 +332,11 @@ enddef
 
 export def DiffOrig()
     var prev_file = bufnr()
+    var prev_syn = &syntax
     :vertical new
     var scratch_buf = bufnr()
     set bt=nofile
+    &syntax = prev_syn
     :execute 'read ++edit ' .. bufname(prev_file)
     deletebufline(scratch_buf, 1)
     :diffthis
