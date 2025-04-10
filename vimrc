@@ -103,8 +103,6 @@ noremap <leader>lb <cmd>lbelow<cr>
 noremap <leader>le <cmd>lnewer<cr>
 noremap <leader>lo <cmd>lolder<cr>
 noremap <leader>v <cmd>silent! loadview<cr>
-inoremap <expr> <CR> pumvisible() ? "\<C-Y>" : "\<CR>"
-inoremap <expr> <C-Y> pumvisible() ? "\<CR>" : "\<C-Y>"
 vnoremap <leader>gr "hy:%s/<C-r>h//gc<left><left><left>
 nnoremap <silent> <F5> <cmd>call <SID>PreciseTrimWhiteSpace()<cr>
 nnoremap <leader>tt <cmd>call <SID>AddTermdebug()<cr><cmd>Termdebug<cr>
