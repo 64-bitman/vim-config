@@ -80,6 +80,7 @@ noremap <leader>h <cmd>HelpToc<cr>
 noremap <leader>r <cmd>registers<cr>
 noremap <leader>jh <cmd>jumps<cr>
 noremap <leader>jt <cmd>tags<cr>
+noremap <leader>jm <cmd>marks<cr>
 noremap <leader>jj :tag<Space>
 noremap <leader>ww <cmd>w<cr>
 noremap <leader>wa <cmd>wa<cr>
@@ -269,8 +270,10 @@ augroup Custom
         endif
     }
     au FocusLost * {
-        :silent! checktime
-        :wa
+        if expand("%:p") != ""
+            :silent! checktime
+            :wa
+        endif
     }
 augroup END
 
