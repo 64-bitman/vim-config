@@ -179,7 +179,6 @@ var LspOptions = {
 }
 g:termdebug_config = { evaluate_in_popup: true, wide: 163, variables_window: true, variables_window_height: 15 }
 g:vim_json_warnings = 0
-g:oscyank_silent = true
 
 augroup Custom
     au!
@@ -261,11 +260,6 @@ augroup Custom
         unmap <leader>ts
         unmap <leader>tn
         unmap <leader>to
-    }
-    au TextYankPost * {
-        if v:event.regname ==# "w"
-            :call OSCYankRegister(v:event.regname)
-        endif
     }
     au FocusLost * {
         if expand("%:p") != ""
