@@ -128,6 +128,16 @@ set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case grepformat+=%f:%l:%c:%m
 :set cscopequickfix=s-,c-,d-,i-,t-,e-,a- cscopetag csto=1
 &statusline = " %f%m%r%h %w%y %= CWD: %{pathshorten(substitute(getcwd(winnr()),$HOME,'~',''),4)}  (%l,%c) [%p%%,%P]"
 
+if has("cscope") && filereadable("/usr/bin/cscope")
+   set nocsverb
+   if filereadable("cscope.out")
+      cs add $PWD/cscope.out
+   elseif $CSCOPE_DB != ""
+      cs add $CSCOPE_DB
+   endif
+   set csverb
+endif
+
 var LspServers = [
     {
         name: 'clangd',
