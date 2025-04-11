@@ -1,42 +1,45 @@
-function! cdroot#find_root(markers)
-    let l:path = fnamemodify(expand('%'), ':p')
+vim9script
 
-    if l:path[0] != '/'
-        return ''
+export def FindRoot(markers: list<string>): tuple<string, string>
+    var path: string = fnamemodify(expand('%'), ':p')
+
+    if path[0] != '/'
+        return ('', '')
     endif
 
-    while 1
-        let l:path = fnamemodify(l:path, ':h')
+    while true
+        path = fnamemodify(path, ':h')
 
-        " stop if in home dir ('~')
-        " stop if in root dir ('/')
-        if l:path == expand('$HOME') || l:path == '/'
-            return fnamemodify(expand('%'), ':p:h')
+        # stop if in home dir ('~')
+        # stop if in root dir ('/')
+        if path == expand('$HOME') || path == '/'
+            return ('', fnamemodify(expand('%'), ':p:h'))
         endif
 
-        for marker in a:markers
-            let l:fn = l:path . '/' . marker
+        for marker in markers
+            var fn: string = path .. '/' .. marker
             if filereadable(fn) || isdirectory(fn)
-                return (marker, l:path)
+                return (marker, path)
             endif
         endfor
     endwhile
-endfunction
+    return ('', '')
+enddef
 
-function! cdroot#change_root()
+export def ChangeRoot(): void
     if !exists('b:root_dir')
-        let l:root_dir_info = cdroot#find_root(g:cdroot_markers)
+        var root_dir_info: tuple<string, string> = FindRoot(g:cdroot_markers)
 
-        let b:root_dir = l:root_dir_info[1]
-        let b:root_marker = l:root_dir_info[0]
+        b:root_dir = root_dir_info[1]
+        b:root_marker = root_dir_info[0]
     elseif g:cdroot_cd_once
-        return ''
+        return
     endif
 
     try
-        if strlen(b:root_dir) && b:root_dir !=# getcwd()
-            execute ':cd' fnameescape(b:root_dir)
+        if strlen(b:root_dir) > 0 && b:root_dir !=# getcwd()
+            execute(':lcd ' .. fnameescape(b:root_dir))
         endif
     catch
     endtry
-endfunction
+enddef
