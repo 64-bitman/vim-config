@@ -22,3 +22,6 @@
 [submodule "pack/git/opt/conflict-marker.vim"]
 	path = pack/git/opt/conflict-marker.vim
 	url = https://github.com/rhysd/conflict-marker.vim.git
+[submodule "pack/git/start/vim-sleuth"]
+	path = pack/git/start/vim-sleuth
+	url = https://github.com/tpope/vim-sleuth.git
