@@ -22,3 +22,6 @@
 [submodule "pack/git/start/vim-sleuth"]
 	path = pack/git/start/vim-sleuth
 	url = https://github.com/tpope/vim-sleuth.git
+[submodule "pack/git/start/vim-markdown-extras"]
+	path = pack/git/start/vim-markdown-extras
+	url = https://github.com/ubaldot/vim-markdown-extras.git

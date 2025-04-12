@@ -20,6 +20,7 @@ endif
 filetype plugin indent on
 syntax on
 g:mapleader = " "
+g:maplocalleader = "\\"
 
 augroup ColorschemeCustom
     au!
