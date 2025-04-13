@@ -122,7 +122,7 @@ set linebreak scrolloff=10 wrap nostartofline cpoptions+=n nofoldenable foldleve
 set autoread autowrite backspace=indent,eol,start
 set backupcopy=auto backup writebackup undofile
 set nohidden history=1000 sessionoptions-=options sessionoptions-=folds viewoptions-=cursor diffopt+=vertical
-set encoding=utf8 ffs=unix,dos,mac
+set encoding=utf8 ffs=unix,dos,mac termwinscroll=100000
 set showmatch matchtime=1 matchpairs+=<:> ttimeoutlen=0 wrapmargin=15
 set spelllang=en_ca,en_us,en_gb spelloptions=camel spellsuggest=best,20 dictionary+=/usr/share/dict/words complete+=k
 set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case grepformat+=%f:%l:%c:%m
@@ -191,6 +191,7 @@ var LspOptions = {
 }
 g:termdebug_config = { evaluate_in_popup: true, wide: 163, variables_window: true, variables_window_height: 15 }
 g:vim_json_warnings = 0
+g:helptoc = {'shell_prompt': '^\[\w\+@\w\+\s.\+\]\d*\$\s.*$'}
 
 augroup Custom
     au!
