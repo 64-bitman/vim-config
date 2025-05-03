@@ -210,7 +210,7 @@ augroup Custom
                 g:_cdroot = true
                 :packadd vim-fugitive
                 :packadd conflict-marker.vim
-                :helptags ALL
+                silent! :helptags ALL
             endif
         endif
     }
@@ -223,12 +223,12 @@ augroup Custom
     }
     au Filetype c,cpp,python,sh,json,jsonc ++once {
         :packadd lsp
-        :helptags ALL
+        silent! :helptags ALL
     }
     au User LspSetup {
         :packadd vim-vsnip
         :packadd vim-vsnip-integ
-        :helptags ALL
+        silent! :helptags ALL
 
         call LspOptionsSet(LspOptions)
         call LspAddServer(LspServers)
