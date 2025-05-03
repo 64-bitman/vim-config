@@ -25,3 +25,6 @@
 [submodule "pack/git/start/vim-markdown-extras"]
 	path = pack/git/start/vim-markdown-extras
 	url = https://github.com/ubaldot/vim-markdown-extras.git
+[submodule "pack/git/start/vim-saveroot"]
+	path = pack/git/start/vim-saveroot
+	url = git@github.com:64-bitman/vim-saveroot.git

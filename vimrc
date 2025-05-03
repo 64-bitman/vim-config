@@ -25,7 +25,7 @@ g:maplocalleader = "\\"
 augroup ColorschemeCustom
     au!
     au Colorscheme * {
-        :highlight link Normal NonText
+        highlight link Normal NonText
 
         # gruvbox for terminal
         g:terminal_ansi_colors = [
@@ -85,8 +85,8 @@ noremap <leader>jm <cmd>marks<cr>
 noremap <leader>jj :tag<Space>
 noremap <leader>ww <cmd>w<cr>
 noremap <leader>wa <cmd>wa<cr>
-noremap <leader>co <cmd>copen<cr>
-noremap <leader>cw <cmd>cwindow<cr>
+noremap <leader>co <cmd>bot copen<cr>
+noremap <leader>cw <cmd>bot cwindow<cr>
 noremap <leader>cc <cmd>cclose<cr>
 noremap <leader>cl <cmd>cc<cr>
 noremap <leader>cn <cmd>cnext<cr>
@@ -116,18 +116,18 @@ nnoremap <leader>uf <cmd>UndotreeFocus<CR>
 set laststatus=2 number relativenumber ruler cursorline showcmd mouse=a ttymouse=sgr title background=dark
 set wildmenu completeopt=menuone,preview,popup wildignorecase wildoptions=pum pumheight=25 keywordprg=:Man
 set expandtab tabstop=4 softtabstop=4 shiftwidth=4 shiftround smarttab smartindent autoindent
-set nohlsearch incsearch ignorecase smartcase
+set nohlsearch incsearch ignorecase smartcase nojoinspaces
 set lazyredraw termguicolors signcolumn=number omnifunc=syntaxcomplete#Complete
 set linebreak scrolloff=10 wrap nostartofline cpoptions+=n nofoldenable foldlevelstart=99 foldmethod=indent showbreak=>>>\
-set autoread autowrite backspace=indent,eol,start
+set autoread autowrite backspace=indent,eol,start textwidth=80
 set backupcopy=auto backup writebackup undofile
 set nohidden history=1000 sessionoptions-=options sessionoptions-=folds viewoptions-=cursor diffopt+=vertical
 set encoding=utf8 ffs=unix,dos,mac termwinscroll=100000
 set showmatch matchtime=1 matchpairs+=<:> ttimeoutlen=0 wrapmargin=15
 set spelllang=en_ca,en_us,en_gb spelloptions=camel spellsuggest=best,20 dictionary+=/usr/share/dict/words complete+=k
 set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case grepformat+=%f:%l:%c:%m
-:set cscopequickfix=s-,c-,d-,i-,t-,e-,a- cscopetag csto=1
-&statusline = " %f%m%r%h %w%y %= CWD: %{pathshorten(substitute(getcwd(winnr()),$HOME,'~',''),4)}  (%l,%c) [%p%%,%P]"
+set cscopequickfix=s-,c-,d-,i-,t-,e-,a- cscopetag csto=1
+&statusline = " %f%m%r%h %w%y %= CWD: %{" .. expand("<SID>") .. "GetCwd()}  (%l,%c) [%p%%,%P]"
 
 if has("cscope") && filereadable("/usr/bin/cscope")
    set nocsverb
@@ -196,17 +196,17 @@ g:helptoc = {'shell_prompt': '^\[\w\+@\w\+\s.\+\]\d*\$\s.*$'}
 augroup Custom
     au!
     au FileType * {
-        setlocal formatoptions+=j formatoptions-=cro
+        setlocal formatoptions+=cqjno
         if &makeprg == "make"
             setlocal makeprg=make\ -j12
         endif
     }
     autocmd BufRead,BufNewFile *.h setlocal filetype=c
-    au FileType qf Use_q_AsExit()
+    au FileType qf,fugitive Use_q_AsExit()
     au CmdWinEnter * Use_q_AsExit()
-    au User CdRootChange {
+    au User SaverootCD {
         if !exists("g:_cdroot")
-            if b:root_marker == ".git" || b:root_marker == ".projectroot_git"
+            if b:saveroot_marker =~# ".git" || b:saveroot_marker =~# ".projectroot_git"
                 g:_cdroot = true
                 :packadd vim-fugitive
                 :packadd conflict-marker.vim
@@ -216,7 +216,7 @@ augroup Custom
     }
     au BufReadPost * {
         var line = line("'\"")
-        if line >= 1 && line <= line("$") && &filetype !~# 'commit'
+        if !exists("g:SessionLoad") && line >= 1 && line <= line("$") && &filetype !~# 'commit'
                 && index(['xxd', 'gitrebase'], &filetype) == -1
             :execute "normal! g`\""
         endif
@@ -280,6 +280,7 @@ augroup Custom
             :wa
         endif
     }
+    au WinClosed * wincmd p
 augroup END
 
 command! Glow Glow()
@@ -287,7 +288,7 @@ command! DiffOrig DiffOrig()
 command! SynStack SynStack()
 command -nargs=* -complete=file Make make! <args>
 
-def OnLspAttach()
+def OnLspAttach(): void
     setlocal tagfunc=lsp#lsp#TagFunc
 
     noremap <buffer> <leader>g <cmd>LspDiag current<cr>
@@ -308,7 +309,7 @@ def OnLspAttach()
     SetupVsnip()
 enddef
 
-def SetupVsnip()
+def SetupVsnip(): void
     # Jump forward or backward
     imap <buffer> <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
     smap <buffer> <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
@@ -316,33 +317,33 @@ def SetupVsnip()
     smap <buffer> <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
 enddef
 
-def PreciseTrimWhiteSpace()
-    var saved_view = winsaveview()
+def PreciseTrimWhiteSpace(): void
+    var saved_view: dict<number> = winsaveview()
     :keepjumps exe ":%s/\\s\\+$//ge"
     winrestview(saved_view)
 enddef
 
-def Use_q_AsExit()
-    nnoremap <nowait> <buffer> q <cmd>quit<cr>
+def Use_q_AsExit(): void
+    nnoremap <nowait> <buffer> q <cmd>q<cr>
     nnoremap <nowait> <buffer> <C-q> q
 enddef
 
-def AddTermdebug()
+def AddTermdebug(): void
     if !get(g:, "termdebug_loaded")
         packadd termdebug
     endif
 enddef
 
-def Glow()
+def Glow(): void
     :silent! !glow %:p
     :redraw!
 enddef
 
-export def DiffOrig()
-    var prev_file = bufnr()
-    var prev_syn = &syntax
+export def DiffOrig(): void
+    var prev_file: number = bufnr()
+    var prev_syn: string = &syntax
     :vertical new
-    var scratch_buf = bufnr()
+    var scratch_buf: number = bufnr()
     set bt=nofile
     &syntax = prev_syn
     :execute 'read ++edit ' .. bufname(prev_file)
@@ -359,9 +360,20 @@ export def DiffOrig()
     }
 enddef
 
-def SynStack()
+def SynStack(): void
   if !exists("*synstack")
     return
   endif
   echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+enddef
+
+def GetCwd(): string
+    var cwd: string = substitute(getcwd(0, 0), $HOME, '~', '')
+    const max_len: number = 30
+
+    while len(cwd) > max_len
+        cwd = cwd[stridx(cwd, '/') + 1 :]
+    endwhile
+
+    return cwd
 enddef
