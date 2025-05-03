@@ -5,3 +5,4 @@ view/*
 .*
 !.gitignore
 !.gitmodules
+saveroot.txt

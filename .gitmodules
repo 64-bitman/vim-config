@@ -16,12 +16,15 @@
 [submodule "pack/git/opt/vim-fugitive"]
 	path = pack/git/opt/vim-fugitive
 	url = https://github.com/tpope/vim-fugitive.git
-[submodule "pack/git/start/vim-oscyank"]
-	path = pack/git/start/vim-oscyank
-	url = https://github.com/ojroques/vim-oscyank.git
 [submodule "pack/git/opt/conflict-marker.vim"]
 	path = pack/git/opt/conflict-marker.vim
 	url = https://github.com/rhysd/conflict-marker.vim.git
 [submodule "pack/git/start/vim-sleuth"]
 	path = pack/git/start/vim-sleuth
 	url = https://github.com/tpope/vim-sleuth.git
+[submodule "pack/git/start/vim-markdown-extras"]
+	path = pack/git/start/vim-markdown-extras
+	url = https://github.com/ubaldot/vim-markdown-extras.git
+[submodule "pack/git/start/vim-saveroot"]
+	path = pack/git/start/vim-saveroot
+	url = git@github.com:64-bitman/vim-saveroot.git
