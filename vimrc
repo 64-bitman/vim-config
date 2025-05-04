@@ -45,6 +45,8 @@ augroup ColorschemeCustom
         hi PmenuKindSel ctermbg=237 guibg=#212121
         hi PmenuMatchSel ctermbg=237 guibg=#212121
         hi! link PmenuExtraSel PmenuSel
+        hi SpecialKey guifg=red
+
 
         highlight ConflictMarkerOurs guibg=#2e5049
         highlight ConflictMarkerTheirs guibg=#344f69
@@ -119,7 +121,7 @@ set expandtab tabstop=4 softtabstop=4 shiftwidth=4 shiftround smarttab smartinde
 set nohlsearch incsearch ignorecase smartcase nojoinspaces
 set lazyredraw termguicolors signcolumn=number omnifunc=syntaxcomplete#Complete
 set linebreak scrolloff=10 wrap nostartofline cpoptions+=n nofoldenable foldlevelstart=99 foldmethod=indent showbreak=>>>\
-set autoread autowrite backspace=indent,eol,start textwidth=80
+set autoread autowrite backspace=indent,eol,start textwidth=80 list listchars=tab:\ \ ,trail:~
 set backupcopy=auto backup writebackup undofile
 set nohidden history=1000 sessionoptions-=options sessionoptions-=folds viewoptions-=cursor diffopt+=vertical
 set encoding=utf8 ffs=unix,dos,mac termwinscroll=100000
@@ -238,7 +240,9 @@ augroup Custom
         augroup END
     }
     au VimResume * :silent! checktime
-    au VimResized * :wincmd =
+    au VimResized * {
+        :wincmd =
+    }
     au VimLeavePre * {
         if v:this_session != ""
             execute ':mksession! ' .. v:this_session
@@ -369,7 +373,7 @@ enddef
 
 def GetCwd(): string
     var cwd: string = substitute(getcwd(0, 0), $HOME, '~', '')
-    const max_len: number = 30
+    const max_len: number = 50
 
     while len(cwd) > max_len
         cwd = cwd[stridx(cwd, '/') + 1 :]
