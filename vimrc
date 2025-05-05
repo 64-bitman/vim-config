@@ -45,7 +45,6 @@ augroup ColorschemeCustom
         hi PmenuKindSel ctermbg=237 guibg=#212121
         hi PmenuMatchSel ctermbg=237 guibg=#212121
         hi! link PmenuExtraSel PmenuSel
-        hi SpecialKey guifg=red
 
 
         highlight ConflictMarkerOurs guibg=#2e5049
@@ -121,7 +120,7 @@ set expandtab tabstop=4 softtabstop=4 shiftwidth=4 shiftround smarttab smartinde
 set nohlsearch incsearch ignorecase smartcase nojoinspaces
 set lazyredraw termguicolors signcolumn=number omnifunc=syntaxcomplete#Complete
 set linebreak scrolloff=10 wrap nostartofline cpoptions+=n nofoldenable foldlevelstart=99 foldmethod=indent showbreak=>>>\
-set autoread autowrite backspace=indent,eol,start textwidth=80 list listchars=tab:\ \ ,trail:~
+set autoread autowrite backspace=indent,eol,start textwidth=80
 set backupcopy=auto backup writebackup undofile
 set nohidden history=1000 sessionoptions-=options sessionoptions-=folds viewoptions-=cursor diffopt+=vertical
 set encoding=utf8 ffs=unix,dos,mac termwinscroll=100000
