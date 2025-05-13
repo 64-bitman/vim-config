@@ -189,11 +189,13 @@ var LspOptions = {
     showSignature: true,
     snippetSupport: true,
     vsnipSupport: true,
-    completionTextEdit: false,
+    popupBorder: true,
 }
 g:termdebug_config = { evaluate_in_popup: true, wide: 163, variables_window: true, variables_window_height: 15 }
 g:vim_json_warnings = 0
 g:helptoc = {'shell_prompt': '^\[\w\+@\w\+\s.\+\]\d*\$\s.*$'}
+g:vsnip_integ_create_autocmd = false
+
 
 augroup Custom
     au!
@@ -313,12 +315,32 @@ def OnLspAttach(): void
     SetupVsnip()
 enddef
 
+def DoSnippet(): string
+    g:vsnip_dont_complete = false
+    return "\<C-y>"
+enddef
+
 def SetupVsnip(): void
+    g:vsnip_dont_complete = true
+
+    imap <expr> <C-j> pumvisible() ?  DoSnippet() : '<C-j>'
+
     # Jump forward or backward
     imap <buffer> <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
     smap <buffer> <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
     imap <buffer> <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
     smap <buffer> <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
+
+    augroup CustomVsnip
+        autocmd CompleteDonePre * {
+            if complete_info(['mode']).mode !=? '' && !g:vsnip_dont_complete
+                call vsnip_integ#on_complete_done(v:completed_item)
+            endif
+        }
+        autocmd CompleteDone * {
+            g:vsnip_dont_complete = true
+        }
+    augroup END
 enddef
 
 def PreciseTrimWhiteSpace(): void
