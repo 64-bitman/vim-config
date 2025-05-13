@@ -189,6 +189,7 @@ var LspOptions = {
     showSignature: true,
     snippetSupport: true,
     vsnipSupport: true,
+    completionTextEdit: false,
 }
 g:termdebug_config = { evaluate_in_popup: true, wide: 163, variables_window: true, variables_window_height: 15 }
 g:vim_json_warnings = 0
