@@ -61,8 +61,6 @@ nnoremap <leader>o o<esc>
 nnoremap <leader>O O<esc>
 nnoremap <leader>m <cmd>ls<CR>:b<Space>
 nnoremap <leader>M <cmd>ls<CR>:bd<Space>
-noremap <leader>/ <cmd>set hlsearch!<cr>
-noremap <C-l> <C-l><cmd>nohlsearch<cr><cmd>match<cr><cmd>diffupdate<cr>
 nnoremap <S-Tab> <C-o>
 noremap <C-j> <C-d>
 noremap <C-k> <C-u>
@@ -74,10 +72,6 @@ noremap <leader>f <cmd>silent! w<cr><cmd>FZF<cr>
 tnoremap <C-n> <C-\><C-n>
 noremap <leader>q <cmd>stop<cr>
 noremap <leader>e <cmd>wqa<cr>
-noremap <C-S-Left> <C-W>>
-noremap <C-S-Right> <C-W><
-noremap <C-S-Up> <C-W>+
-noremap <C-S-Down> <C-W>-
 noremap <leader>h <cmd>HelpToc<cr>
 noremap <leader>r <cmd>registers<cr>
 noremap <leader>jh <cmd>jumps<cr>
@@ -127,18 +121,7 @@ set encoding=utf8 ffs=unix,dos,mac termwinscroll=100000
 set showmatch matchtime=1 matchpairs+=<:> ttimeoutlen=0 wrapmargin=15
 set spelllang=en_ca,en_us,en_gb spelloptions=camel spellsuggest=best,20 dictionary+=/usr/share/dict/words complete+=k
 set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case grepformat+=%f:%l:%c:%m
-set cscopequickfix=s-,c-,d-,i-,t-,e-,a- cscopetag csto=1
 &statusline = " %f%m%r%h %w%y %= CWD: %{" .. expand("<SID>") .. "GetCwd()}  (%l,%c) [%p%%,%P]"
-
-if has("cscope") && filereadable("/usr/bin/cscope")
-   set nocsverb
-   if filereadable("cscope.out")
-      cs add $PWD/cscope.out
-   elseif $CSCOPE_DB != ""
-      cs add $CSCOPE_DB
-   endif
-   set csverb
-endif
 
 var LspServers = [
     {
