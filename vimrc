@@ -13,6 +13,10 @@ vim9script
 :packadd! matchit
 :runtime ftplugin/man.vim
 
+:packadd! conflict-marker.vim
+
+silent! :helptags ALL
+
 if &term == "xterm-kitty"
     runtime kitty.vim
 endif
@@ -148,19 +152,7 @@ var LspServers = [
                 pythonPath: '/usr/bin/python'
             }
         }
-    },
-    {
-        name: 'bashls',
-        filetype: 'sh',
-        path: 'bash-language-server',
-        args: ['start']
-    },
-    {
-        name: 'vscode-json-server',
-        filetype: ['json', 'jsonc'],
-        path: 'vscode-json-language-server',
-        args: ['--stdio'],
-    },
+    }
 ]
 
 var LspOptions = {
@@ -178,6 +170,7 @@ g:termdebug_config = { evaluate_in_popup: true, wide: 163, variables_window: tru
 g:vim_json_warnings = 0
 g:helptoc = {'shell_prompt': '^\[\w\+@\w\+\s.\+\]\d*\$\s.*$'}
 g:vsnip_integ_create_autocmd = false
+g:saveroot_nomatch = "current"
 
 
 augroup Custom
@@ -196,7 +189,6 @@ augroup Custom
             if b:saveroot_marker =~# ".git" || b:saveroot_marker =~# ".projectroot_git"
                 g:_cdroot = true
                 :packadd vim-fugitive
-                :packadd conflict-marker.vim
                 silent! :helptags ALL
             endif
         endif
@@ -221,7 +213,9 @@ augroup Custom
         call LspAddServer(LspServers)
 
         augroup LspAttach
-            au User LspAttached OnLspAttach()
+            au!
+            au User LspAttached OnLspAttach() | b:lsp_set = true
+            au FileType c,cpp,python if !exists("b:lsp_set") | OnLspAttach() | endif
         augroup END
     }
     au VimResume * :silent! checktime
@@ -272,7 +266,6 @@ augroup Custom
     au WinClosed * wincmd p
 augroup END
 
-command! Glow Glow()
 command! DiffOrig DiffOrig()
 command! SynStack SynStack()
 command -nargs=* -complete=file Make make! <args>
@@ -315,12 +308,13 @@ def SetupVsnip(): void
     smap <buffer> <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
 
     augroup CustomVsnip
-        autocmd CompleteDonePre * {
-            if complete_info(['mode']).mode !=? '' && !g:vsnip_dont_complete
-                call vsnip_integ#on_complete_done(v:completed_item)
-            endif
+        au!
+        autocmd CompleteDonePre <buffer> {
+             if complete_info(['mode']).mode !=? '' && !g:vsnip_dont_complete
+               call vsnip_integ#on_complete_done(v:completed_item)
+             endif
         }
-        autocmd CompleteDone * {
+        autocmd CompleteDone <buffer> {
             g:vsnip_dont_complete = true
         }
     augroup END
@@ -341,11 +335,6 @@ def AddTermdebug(): void
     if !get(g:, "termdebug_loaded")
         packadd termdebug
     endif
-enddef
-
-def Glow(): void
-    :silent! !glow %:p
-    :redraw!
 enddef
 
 export def DiffOrig(): void

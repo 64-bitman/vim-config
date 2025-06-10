@@ -25,3 +25,6 @@
 [submodule "pack/git/start/vim-saveroot"]
 	path = pack/git/start/vim-saveroot
 	url = git@github.com:64-bitman/vim-saveroot.git
+[submodule "pack/git/opt/mesonic"]
+	path = pack/git/opt/mesonic
+	url = https://github.com/igankevich/mesonic.git
