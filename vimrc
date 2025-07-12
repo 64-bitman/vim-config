@@ -5,7 +5,7 @@ vim9script
 &t_EI = "\<Esc>[2 q"
 
 :packadd! comment
-:packadd! editorconfig
+# :packadd! editorconfig
 :packadd! hlyank
 :packadd! helptoc
 :packadd! justify
@@ -120,7 +120,8 @@ set lazyredraw termguicolors signcolumn=number omnifunc=syntaxcomplete#Complete
 set linebreak scrolloff=10 wrap nostartofline cpoptions+=n nofoldenable foldlevelstart=99 foldmethod=indent showbreak=>>>\
 set autoread autowrite backspace=indent,eol,start textwidth=80
 set backupcopy=auto backup writebackup undofile
-set nohidden history=1000 sessionoptions-=options sessionoptions-=folds viewoptions-=cursor diffopt+=vertical
+set nohidden history=1000 sessionoptions-=options sessionoptions-=folds viewoptions-=cursor
+set diffopt-=inline:simple diffopt+=vertical,inline:char
 set encoding=utf8 ffs=unix,dos,mac termwinscroll=100000
 set showmatch matchtime=1 matchpairs+=<:> ttimeoutlen=0 wrapmargin=15
 set spelllang=en_ca,en_us,en_gb spelloptions=camel spellsuggest=best,20 dictionary+=/usr/share/dict/words complete+=k
@@ -287,6 +288,7 @@ def OnLspAttach(): void
     noremap <buffer> <leader>dp <cmd>LspDiagPrev<cr>
     noremap <buffer> <leader>dn <cmd>LspDiagNext<cr>
     noremap <buffer> <leader>L <cmd>LspDiagShow<cr>
+    noremap <buffer> <leader>lf <cmd>LspDocumentSymbol<cr>
 
     SetupVsnip()
 enddef
