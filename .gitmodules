@@ -28,3 +28,6 @@
 [submodule "pack/git/opt/mesonic"]
 	path = pack/git/opt/mesonic
 	url = https://github.com/igankevich/mesonic.git
+[submodule "pack/git/start/mesonic"]
+	path = pack/git/start/mesonic
+	url = https://github.com/igankevich/mesonic.git

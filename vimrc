@@ -5,7 +5,7 @@ vim9script
 &t_EI = "\<Esc>[2 q"
 
 :packadd! comment
-# :packadd! editorconfig
+:packadd! editorconfig
 :packadd! hlyank
 :packadd! helptoc
 :packadd! justify
@@ -73,7 +73,7 @@ noremap k gk
 noremap gj j
 noremap gk k
 noremap <leader>f <cmd>silent! w<cr><cmd>FZF<cr>
-tnoremap <C-n> <C-\><C-n>
+tnoremap <A-n> <C-\><C-n>
 noremap <leader>q <cmd>stop<cr>
 noremap <leader>e <cmd>wqa<cr>
 noremap <leader>h <cmd>HelpToc<cr>
@@ -115,7 +115,7 @@ nnoremap <leader>uf <cmd>UndotreeFocus<CR>
 set laststatus=2 number relativenumber ruler cursorline showcmd mouse=a ttymouse=sgr title background=dark
 set wildmenu completeopt=menuone,preview,popup wildignorecase wildoptions=pum pumheight=25 keywordprg=:Man
 set expandtab tabstop=4 softtabstop=4 shiftwidth=4 shiftround smarttab smartindent autoindent
-set nohlsearch incsearch ignorecase smartcase nojoinspaces
+set nohlsearch incsearch ignorecase smartcase nojoinspaces virtualedit=block
 set lazyredraw termguicolors signcolumn=number omnifunc=syntaxcomplete#Complete
 set linebreak scrolloff=10 wrap nostartofline cpoptions+=n nofoldenable foldlevelstart=99 foldmethod=indent showbreak=>>>\
 set autoread autowrite backspace=indent,eol,start textwidth=80
@@ -123,7 +123,7 @@ set backupcopy=auto backup writebackup undofile
 set nohidden history=1000 sessionoptions-=options sessionoptions-=folds viewoptions-=cursor
 set diffopt-=inline:simple diffopt+=vertical,inline:char
 set encoding=utf8 ffs=unix,dos,mac termwinscroll=100000
-set showmatch matchtime=1 matchpairs+=<:> ttimeoutlen=0 wrapmargin=15
+set showmatch matchtime=1 matchpairs+=<:> ttimeoutlen=0 wrapmargin=15 shortmess-=S
 set spelllang=en_ca,en_us,en_gb spelloptions=camel spellsuggest=best,20 dictionary+=/usr/share/dict/words complete+=k
 set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case grepformat+=%f:%l:%c:%m
 &statusline = " %f%m%r%h %w%y %= CWD: %{" .. expand("<SID>") .. "GetCwd()}  (%l,%c) [%p%%,%P]"
@@ -157,8 +157,8 @@ var LspServers = [
 ]
 
 var LspOptions = {
-    autoComplete: true,
-    omniComplete: false,
+    autoComplete: false,
+    omniComplete: true,
     showInlayHints: false,
     useBufferCompletion: false,
     filterCompletionDuplicates: true,
@@ -172,7 +172,7 @@ g:vim_json_warnings = 0
 g:helptoc = {'shell_prompt': '^\[\w\+@\w\+\s.\+\]\d*\$\s.*$'}
 g:vsnip_integ_create_autocmd = false
 g:saveroot_nomatch = "current"
-
+g:EditorConfig_max_line_indicator = "none"
 
 augroup Custom
     au!
@@ -272,7 +272,7 @@ command! SynStack SynStack()
 command -nargs=* -complete=file Make make! <args>
 
 def OnLspAttach(): void
-    setlocal tagfunc=lsp#lsp#TagFunc
+    setlocal tagfunc=lsp#lsp#TagFunc omnifunc=g:LspOmniFunc
 
     noremap <buffer> <leader>g <cmd>LspDiag current<cr>
     noremap <buffer> <leader>= :LspFormat<cr>
@@ -289,6 +289,8 @@ def OnLspAttach(): void
     noremap <buffer> <leader>dn <cmd>LspDiagNext<cr>
     noremap <buffer> <leader>L <cmd>LspDiagShow<cr>
     noremap <buffer> <leader>lf <cmd>LspDocumentSymbol<cr>
+    noremap <buffer> <leader>ss <cmd>LspShowSignature<cr>
+    inoremap <buffer> <C-X><C-X> <cmd>LspShowSignature<cr>
 
     SetupVsnip()
 enddef

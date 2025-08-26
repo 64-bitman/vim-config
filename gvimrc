@@ -1,1 +1,1 @@
-set toolbariconsize=giant
+set background=dark
