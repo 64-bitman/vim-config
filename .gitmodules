@@ -7,12 +7,6 @@
 [submodule "pack/git/start/undotree"]
 	path = pack/git/start/undotree
 	url = https://github.com/mbbill/undotree.git
-[submodule "pack/git/opt/vim-vsnip"]
-	path = pack/git/opt/vim-vsnip
-	url = https://github.com/hrsh7th/vim-vsnip.git
-[submodule "pack/git/opt/vim-vsnip-integ"]
-	path = pack/git/opt/vim-vsnip-integ
-	url = https://github.com/hrsh7th/vim-vsnip-integ.git
 [submodule "pack/git/opt/vim-fugitive"]
 	path = pack/git/opt/vim-fugitive
 	url = https://github.com/tpope/vim-fugitive.git

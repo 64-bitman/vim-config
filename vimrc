@@ -5,7 +5,7 @@ vim9script
 &t_EI = "\<Esc>[2 q"
 
 :packadd! comment
-:packadd! editorconfig
+# :packadd! editorconfig
 :packadd! hlyank
 :packadd! helptoc
 :packadd! justify
@@ -163,14 +163,17 @@ var LspOptions = {
     useBufferCompletion: false,
     filterCompletionDuplicates: true,
     showSignature: true,
-    snippetSupport: true,
-    vsnipSupport: true,
+    snippetSupport: false,
     popupBorder: true,
 }
-g:termdebug_config = { evaluate_in_popup: true, wide: 163, variables_window: true, variables_window_height: 15 }
+g:termdebug_config = {
+    evaluate_in_popup: true,
+    wide: 163,
+    variables_window: true,
+    variables_window_height: 15
+}
 g:vim_json_warnings = 0
 g:helptoc = {'shell_prompt': '^\[\w\+@\w\+\s.\+\]\d*\$\s.*$'}
-g:vsnip_integ_create_autocmd = false
 g:saveroot_nomatch = "current"
 g:EditorConfig_max_line_indicator = "none"
 
@@ -206,8 +209,6 @@ augroup Custom
         silent! :helptags ALL
     }
     au User LspSetup {
-        :packadd vim-vsnip
-        :packadd vim-vsnip-integ
         silent! :helptags ALL
 
         call LspOptionsSet(LspOptions)
@@ -272,7 +273,9 @@ command! SynStack SynStack()
 command -nargs=* -complete=file Make make! <args>
 
 def OnLspAttach(): void
-    setlocal tagfunc=lsp#lsp#TagFunc omnifunc=g:LspOmniFunc
+    setlocal tagfunc=lsp#lsp#TagFunc
+    setlocal omnifunc=g:LspOmniFunc
+    setlocal formatexpr=lsp#lsp#FormatExpr()
 
     noremap <buffer> <leader>g <cmd>LspDiag current<cr>
     noremap <buffer> <leader>= :LspFormat<cr>
@@ -291,37 +294,6 @@ def OnLspAttach(): void
     noremap <buffer> <leader>lf <cmd>LspDocumentSymbol<cr>
     noremap <buffer> <leader>ss <cmd>LspShowSignature<cr>
     inoremap <buffer> <C-X><C-X> <cmd>LspShowSignature<cr>
-
-    SetupVsnip()
-enddef
-
-def DoSnippet(): string
-    g:vsnip_dont_complete = false
-    return "\<C-y>"
-enddef
-
-def SetupVsnip(): void
-    g:vsnip_dont_complete = true
-
-    imap <expr> <C-j> pumvisible() ?  DoSnippet() : '<C-j>'
-
-    # Jump forward or backward
-    imap <buffer> <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
-    smap <buffer> <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
-    imap <buffer> <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
-    smap <buffer> <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
-
-    augroup CustomVsnip
-        au!
-        autocmd CompleteDonePre <buffer> {
-             if complete_info(['mode']).mode !=? '' && !g:vsnip_dont_complete
-               call vsnip_integ#on_complete_done(v:completed_item)
-             endif
-        }
-        autocmd CompleteDone <buffer> {
-            g:vsnip_dont_complete = true
-        }
-    augroup END
 enddef
 
 def PreciseTrimWhiteSpace(): void
