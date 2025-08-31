@@ -109,8 +109,8 @@ nnoremap <leader>tt <cmd>call <SID>AddTermdebug()<cr><cmd>Termdebug<cr>
 nnoremap <leader>ls <cmd>doautocmd User LspAttached<cr>
 nnoremap <leader>be <cmd>syntax on<cr>
 nnoremap <leader>bd <cmd>syntax off<cr>
-nnoremap <leader>uu <cmd>UndotreeToggle<CR>
-nnoremap <leader>uf <cmd>UndotreeFocus<CR>
+nnoremap <leader>u<CR> <cmd>UndotreeToggle<CR>
+nnoremap <leader>u<Tab> <cmd>UndotreeFocus<CR>
 
 set laststatus=2 number relativenumber ruler cursorline showcmd mouse=a ttymouse=sgr title background=dark
 set wildmenu completeopt=menuone,preview,popup wildignorecase wildoptions=pum pumheight=25 keywordprg=:Man
@@ -153,6 +153,13 @@ var LspServers = [
                 pythonPath: '/usr/bin/python'
             }
         }
+    },
+    {
+        name: 'rust-analyzer',
+        filetype: ['rust'],
+        path: '/usr/bin/rust-analyzer',
+        args: [],
+        syncInit: v:true
     }
 ]
 
@@ -176,6 +183,7 @@ g:vim_json_warnings = 0
 g:helptoc = {'shell_prompt': '^\[\w\+@\w\+\s.\+\]\d*\$\s.*$'}
 g:saveroot_nomatch = "current"
 g:EditorConfig_max_line_indicator = "none"
+g:vim_markdown_math = 1
 
 augroup Custom
     au!
@@ -204,7 +212,7 @@ augroup Custom
             :execute "normal! g`\""
         endif
     }
-    au Filetype c,cpp,python,sh,json,jsonc ++once {
+    au Filetype c,cpp,python,rust ++once {
         :packadd lsp
         silent! :helptags ALL
     }
@@ -217,7 +225,7 @@ augroup Custom
         augroup LspAttach
             au!
             au User LspAttached OnLspAttach() | b:lsp_set = true
-            au FileType c,cpp,python if !exists("b:lsp_set") | OnLspAttach() | endif
+            au FileType c,cpp,python,rust if !exists("b:lsp_set") | OnLspAttach() | endif
         augroup END
     }
     au VimResume * :silent! checktime
@@ -275,7 +283,7 @@ command -nargs=* -complete=file Make make! <args>
 def OnLspAttach(): void
     setlocal tagfunc=lsp#lsp#TagFunc
     setlocal omnifunc=g:LspOmniFunc
-    setlocal formatexpr=lsp#lsp#FormatExpr()
+    # setlocal formatexpr=lsp#lsp#FormatExpr()
 
     noremap <buffer> <leader>g <cmd>LspDiag current<cr>
     noremap <buffer> <leader>= :LspFormat<cr>

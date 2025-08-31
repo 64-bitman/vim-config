@@ -1,6 +1,3 @@
-[submodule "pack/git/opt/lsp"]
-	path = pack/git/opt/lsp
-	url = git@github.com:64-bitman/lsp.git
 [submodule "pack/git/start/vim-c-cpp-modern"]
 	path = pack/git/start/vim-c-cpp-modern
 	url = https://github.com/bfrg/vim-c-cpp-modern.git
@@ -22,3 +19,6 @@
 [submodule "pack/git/start/mesonic"]
 	path = pack/git/start/mesonic
 	url = https://github.com/igankevich/mesonic.git
+[submodule "pack/git/opt/lsp"]
+	path = pack/git/opt/lsp
+	url = https://github.com/yegappan/lsp.git
