@@ -22,3 +22,6 @@
 [submodule "pack/git/opt/lsp"]
 	path = pack/git/opt/lsp
 	url = https://github.com/yegappan/lsp.git
+[submodule "pack/git/start/vim-maketerm"]
+	path = pack/git/start/vim-maketerm
+	url = git@github.com:64-bitman/vim-maketerm.git

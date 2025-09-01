@@ -159,7 +159,7 @@ var LspServers = [
         filetype: ['rust'],
         path: '/usr/bin/rust-analyzer',
         args: [],
-        syncInit: v:true
+        syncInit: true,
     }
 ]
 
@@ -228,6 +228,9 @@ augroup Custom
             au FileType c,cpp,python,rust if !exists("b:lsp_set") | OnLspAttach() | endif
         augroup END
     }
+    au FileType rust {
+        &makeprg = "cargo --color=always $*"
+    }
     au VimResume * :silent! checktime
     au VimResized * {
         :wincmd =
@@ -278,16 +281,15 @@ augroup END
 
 command! DiffOrig DiffOrig()
 command! SynStack SynStack()
-command -nargs=* -complete=file Make make! <args>
 
 def OnLspAttach(): void
     setlocal tagfunc=lsp#lsp#TagFunc
     setlocal omnifunc=g:LspOmniFunc
+    setlocal keywordprg=:LspHover
     # setlocal formatexpr=lsp#lsp#FormatExpr()
 
     noremap <buffer> <leader>g <cmd>LspDiag current<cr>
     noremap <buffer> <leader>= :LspFormat<cr>
-    noremap <buffer> <leader>i <cmd>LspHover<cr>
     noremap <buffer> <leader>sh <cmd>LspSwitchSourceHeader<cr>
     noremap <buffer> <leader>hh <cmd>LspHighlight<cr>
     noremap <buffer> <leader>hc <cmd>LspHighlightClear<cr>
