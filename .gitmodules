@@ -22,3 +22,6 @@
 [submodule "pack/git/opt/lsp"]
 	path = pack/git/opt/lsp
 	url = https://github.com/yegappan/lsp.git
+[submodule "pack/git/start/vim-dadbod"]
+	path = pack/git/start/vim-dadbod
+	url = https://github.com/tpope/vim-dadbod.git
