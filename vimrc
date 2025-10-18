@@ -109,8 +109,8 @@ nnoremap <leader>tt <cmd>call <SID>AddTermdebug()<cr><cmd>Termdebug<cr>
 nnoremap <leader>ls <cmd>doautocmd User LspAttached<cr>
 nnoremap <leader>be <cmd>syntax on<cr>
 nnoremap <leader>bd <cmd>syntax off<cr>
-nnoremap <leader>u<CR> <cmd>UndotreeToggle<CR>
-nnoremap <leader>u<Tab> <cmd>UndotreeFocus<CR>
+nnoremap <leader>uu <cmd>UndotreeToggle<CR><cmd>UndotreeFocus<cr>
+nnoremap <leader>uf <cmd>UndotreeFocus<CR>
 
 set laststatus=2 number relativenumber ruler cursorline showcmd mouse=a ttymouse=sgr title background=dark
 set wildmenu completeopt=menuone,preview,popup wildignorecase wildoptions=pum pumheight=25 keywordprg=:Man
@@ -193,7 +193,12 @@ augroup Custom
             setlocal makeprg=make\ -j12
         endif
     }
-    autocmd BufRead,BufNewFile *.h setlocal filetype=c
+    au BufEnter,TerminalWinOpen * {
+        if &buftype == "terminal"
+            setlocal wincolor=Terminal nonumber norelativenumber fillchars+=eob:\ 
+        endif
+    }
+    au BufRead,BufNewFile *.h setlocal filetype=c
     au FileType qf,fugitive Use_q_AsExit()
     au CmdWinEnter * Use_q_AsExit()
     au User SaverootCD {
@@ -230,6 +235,7 @@ augroup Custom
     }
     au FileType rust {
         &makeprg = "cargo --color=always $*"
+        :compiler cargo
     }
     au VimResume * :silent! checktime
     au VimResized * {
@@ -281,6 +287,7 @@ augroup END
 
 command! DiffOrig DiffOrig()
 command! SynStack SynStack()
+command -nargs=* -complete=file Make make! <args>
 
 def OnLspAttach(): void
     setlocal tagfunc=lsp#lsp#TagFunc
