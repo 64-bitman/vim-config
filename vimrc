@@ -292,7 +292,7 @@ command -nargs=* -complete=file Make make! <args>
 def OnLspAttach(): void
     setlocal tagfunc=lsp#lsp#TagFunc
     setlocal omnifunc=g:LspOmniFunc
-    setlocal keywordprg=:LspHover
+    # setlocal keywordprg=:LspHover
     # setlocal formatexpr=lsp#lsp#FormatExpr()
 
     noremap <buffer> <leader>g <cmd>LspDiag current<cr>
@@ -310,6 +310,7 @@ def OnLspAttach(): void
     noremap <buffer> <leader>L <cmd>LspDiagShow<cr>
     noremap <buffer> <leader>lf <cmd>LspDocumentSymbol<cr>
     noremap <buffer> <leader>ss <cmd>LspShowSignature<cr>
+    noremap <buffer> <leader>lh <cmd>LspHover<cr>
     inoremap <buffer> <C-X><C-X> <cmd>LspShowSignature<cr>
 enddef
 
