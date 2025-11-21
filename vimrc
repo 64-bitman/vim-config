@@ -1,9 +1,5 @@
 vim9script
 
-&t_SI = "\<Esc>[6 q"
-&t_SR = "\<Esc>[4 q"
-&t_EI = "\<Esc>[2 q"
-
 :packadd! comment
 # :packadd! editorconfig
 :packadd! hlyank
@@ -17,8 +13,14 @@ vim9script
 
 silent! :helptags ALL
 
+set termguicolors
+
 if &term == "xterm-kitty"
     runtime kitty.vim
+else
+    &t_SI = "\<Esc>[6 q"
+    &t_SR = "\<Esc>[4 q"
+    &t_EI = "\<Esc>[2 q"
 endif
 
 filetype plugin indent on
@@ -116,7 +118,7 @@ set laststatus=2 number relativenumber ruler cursorline showcmd mouse=a ttymouse
 set wildmenu completeopt=menuone,preview,popup wildignorecase wildoptions=pum pumheight=25 keywordprg=:Man
 set expandtab tabstop=4 softtabstop=4 shiftwidth=4 shiftround smarttab smartindent autoindent
 set nohlsearch incsearch ignorecase smartcase nojoinspaces virtualedit=block
-set lazyredraw termguicolors signcolumn=number omnifunc=syntaxcomplete#Complete
+set lazyredraw signcolumn=number omnifunc=syntaxcomplete#Complete
 set linebreak scrolloff=10 wrap nostartofline cpoptions+=n nofoldenable foldlevelstart=99 foldmethod=indent showbreak=>>>\
 set autoread autowrite backspace=indent,eol,start textwidth=80
 set backupcopy=auto backup writebackup undofile
@@ -127,6 +129,16 @@ set showmatch matchtime=1 matchpairs+=<:> ttimeoutlen=0 wrapmargin=15 shortmess-
 set spelllang=en_ca,en_us,en_gb spelloptions=camel spellsuggest=best,20 dictionary+=/usr/share/dict/words complete+=k
 set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case grepformat+=%f:%l:%c:%m
 &statusline = " %f%m%r%h %w%y %= CWD: %{" .. expand("<SID>") .. "GetCwd()}  (%l,%c) [%p%%,%P]"
+
+
+if has("windows")
+    set shell=pwsh
+    set ffs=dos,unix,mac
+    set viminfofile=~/vimfiles/viminfo
+    set undodir=~/vimfiles/undo
+    set backupdir^=~/vimfiles/backup
+    set directory^=~/vimfiles/swap
+endif
 
 var LspServers = [
     {

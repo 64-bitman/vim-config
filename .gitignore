@@ -6,3 +6,6 @@ view/*
 !.gitignore
 !.gitmodules
 saveroot.txt
+swap/*
+undo/*
+backup/*
