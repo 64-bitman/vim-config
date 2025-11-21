@@ -130,7 +130,7 @@ set spelllang=en_ca,en_us,en_gb spelloptions=camel spellsuggest=best,20 dictiona
 set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case grepformat+=%f:%l:%c:%m
 &statusline = " %f%m%r%h %w%y %= CWD: %{" .. expand("<SID>") .. "GetCwd()}  (%l,%c) [%p%%,%P]"
 
-if has("windows")
+if has("win32")
     set shell=pwsh
     set ffs=dos,unix,mac
     set viminfofile=~/vimfiles/viminfo
