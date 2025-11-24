@@ -22,3 +22,7 @@
 [submodule "pack/git/opt/lsp"]
 	path = pack/git/opt/lsp
 	url = https://github.com/yegappan/lsp.git
+[submodule "pack/git/start/fuzzbox"]
+	path = pack/git/start/fuzzbox
+    url = https://github.com/vim-fuzzbox/fuzzbox.vim.git
+    ignore = dirty

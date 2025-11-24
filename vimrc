@@ -74,7 +74,7 @@ noremap j gj
 noremap k gk
 noremap gj j
 noremap gk k
-noremap <leader>f <cmd>silent! w<cr><cmd>FZF<cr>
+# noremap <leader>f <cmd>silent! w<cr><cmd>FZF<cr>
 tnoremap <A-n> <C-\><C-n>
 noremap <leader>q <cmd>stop<cr>
 noremap <leader>e <cmd>wqa<cr>
@@ -199,6 +199,11 @@ g:helptoc = {'shell_prompt': '^\[\w\+@\w\+\s.\+\]\d*\$\s.*$'}
 g:saveroot_nomatch = "current"
 g:EditorConfig_max_line_indicator = "none"
 g:vim_markdown_math = 1
+
+g:fuzzbox_keymaps = {
+    'menu_up': ["\<C-k>", "\<C-p>", "\<Up>"],
+    'menu_down': ["\<C-j>", "\<C-n>", "\<Down>"],
+}
 
 augroup Custom
     au!
