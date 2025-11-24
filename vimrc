@@ -75,8 +75,12 @@ noremap j gj
 noremap k gk
 noremap gj j
 noremap gk k
-# noremap <leader>f <cmd>silent! w<cr><cmd>FZF<cr>
 tnoremap <A-n> <C-\><C-n>
+for i in range(1, 9)
+    execute "nnoremap <C-w>" .. i .. " <cmd>silent! tabn " .. i .. "<CR>"
+    execute "tnoremap <C-w>" .. i .. " <cmd>silent! tabn " .. i .. "<CR>"
+endfor
+nnoremap <C-t> <cmd>tab term<cr>
 noremap <leader>q <cmd>stop<cr>
 noremap <leader>e <cmd>wqa<cr>
 noremap <leader>h <cmd>HelpToc<cr>
@@ -300,10 +304,10 @@ augroup Custom
     au WinClosed * {
         wincmd p
     }
-    autocmd User FuzzboxOpened {
+    au User FuzzboxOpened {
         :silent! LspServer stop
     }
-    autocmd User FuzzboxClosed {
+    au User FuzzboxClosed {
         :silent! LspServer start
     }
 augroup END
