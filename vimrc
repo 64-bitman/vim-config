@@ -297,7 +297,15 @@ augroup Custom
             :wa
         endif
     }
-    au WinClosed * wincmd p
+    au WinClosed * {
+        wincmd p
+    }
+    autocmd User FuzzboxOpened {
+        :silent! LspServer stop
+    }
+    autocmd User FuzzboxClosed {
+        :silent! LspServer start
+    }
 augroup END
 
 command! DiffOrig DiffOrig()
