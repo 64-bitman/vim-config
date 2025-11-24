@@ -223,8 +223,6 @@ augroup Custom
     au BufRead,BufNewFile *.h setlocal filetype=c
     au FileType qf,fugitive Use_q_AsExit()
     au CmdWinEnter * Use_q_AsExit()
-    au User SaverootCD {
-    }
     au BufReadPost * {
         var line = line("'\"")
         if !exists("g:SessionLoad") && line >= 1 && line <= line("$") && &filetype !~# 'commit'
