@@ -233,8 +233,10 @@ augroup Custom
         endif
     }
     au Filetype c,cpp,python,rust ++once {
-        :packadd lsp
-        silent! :helptags ALL
+        if &buftype == ""
+            :packadd lsp
+            silent! :helptags ALL
+        endif
     }
     au User LspSetup {
         silent! :helptags ALL
