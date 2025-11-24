@@ -7,6 +7,7 @@ vim9script
 :packadd! justify
 :packadd! cfilter
 :packadd! matchit
+:packadd! vim-fugitive
 :runtime ftplugin/man.vim
 
 :packadd! conflict-marker.vim
@@ -137,6 +138,7 @@ if has("win32")
     set undodir=~/vimfiles/undo
     set backupdir^=~/vimfiles/backup
     set directory^=~/vimfiles/swap
+    set belloff=all
 endif
 
 var LspServers = [
@@ -222,13 +224,6 @@ augroup Custom
     au FileType qf,fugitive Use_q_AsExit()
     au CmdWinEnter * Use_q_AsExit()
     au User SaverootCD {
-        if !exists("g:_cdroot")
-            if b:saveroot_marker =~# ".git" || b:saveroot_marker =~# ".projectroot_git"
-                g:_cdroot = true
-                :packadd vim-fugitive
-                silent! :helptags ALL
-            endif
-        endif
     }
     au BufReadPost * {
         var line = line("'\"")
