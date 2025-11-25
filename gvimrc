@@ -1,6 +1,8 @@
 set background=dark
+set guioptions+=d
 
 if has('windows')
+    set guioptions-=rL
     set guicursor+=a:blinkon0
-    set lines=40 columns=140
+    set lines=40 columns=150
 endif
