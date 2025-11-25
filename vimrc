@@ -210,6 +210,8 @@ g:fuzzbox_keymaps = {
     'menu_up': ["\<C-k>", "\<C-p>", "\<Up>"],
     'menu_down': ["\<C-j>", "\<C-n>", "\<Down>"],
 }
+g:fuzzbox_preview = 0
+g:fuzzbox_scrollbar = 1
 
 augroup Custom
     au!
@@ -304,12 +306,12 @@ augroup Custom
     au WinClosed * {
         wincmd p
     }
-    au User FuzzboxOpened {
-        :silent! LspServer stop
-    }
-    au User FuzzboxClosed {
-        :silent! LspServer start
-    }
+    # au User FuzzboxOpened {
+    #     :silent! LspServer stop
+    # }
+    # au User FuzzboxClosed {
+    #     :silent! LspServer start
+    # }
 augroup END
 
 command! DiffOrig DiffOrig()
