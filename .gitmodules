@@ -8,7 +8,7 @@
 	path = pack/git/opt/vim-fugitive
 	url = https://github.com/tpope/vim-fugitive.git
 [submodule "pack/git/opt/conflict-marker.vim"]
-	path = pack/git/opt/conflict-marker.vim
+	path = pack/git/start/conflict-marker.vim
 	url = https://github.com/rhysd/conflict-marker.vim.git
 [submodule "pack/git/start/vim-saveroot"]
 	path = pack/git/start/vim-saveroot

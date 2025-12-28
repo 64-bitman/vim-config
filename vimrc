@@ -11,8 +11,6 @@ vim9script
 :packadd osc52
 :runtime ftplugin/man.vim
 
-:packadd! conflict-marker.vim
-
 silent! :helptags ALL
 
 set termguicolors
@@ -112,7 +110,6 @@ noremap <leader>le <cmd>lnewer<cr>
 noremap <leader>lo <cmd>lolder<cr>
 noremap <leader>v <cmd>silent! loadview<cr>
 vnoremap <leader>gr "hy:%s/<C-r>h//gc<left><left><left>
-nnoremap <silent> <F5> <cmd>call <SID>PreciseTrimWhiteSpace()<cr>
 nnoremap <leader>tt <cmd>call <SID>AddTermdebug()<cr><cmd>Termdebug<cr>
 nnoremap <leader>ls <cmd>doautocmd User LspAttached<cr>
 nnoremap <leader>be <cmd>syntax on<cr>
@@ -146,73 +143,24 @@ if has("win32")
     set belloff=all
 endif
 
-var LspServers = [
-    {
-        name: 'clangd',
-        filetype: ['c', 'cpp'],
-        path: 'clangd',
-        args: [
-            '--background-index',
-            '--clang-tidy',
-            '--pch-storage=memory',
-            '--background-index-priority=normal',
-            '--completion-style=detailed',
-            '--header-insertion=never'
-        ]
-    },
-]
-
-if has('unix')
-    LspServers[0]['args'] += ['--malloc-trim']
-
-    LspServers += [{
-        name: 'pyright',
-        filetype: ['python'],
-        path: 'pyright-langserver',
-        args: ['--stdio'],
-        workspaceConfig: {
-            python: {
-                pythonPath: '/usr/bin/python'
-            }
-        }
-    },
-    {
-        name: 'rust-analyzer',
-        filetype: ['rust'],
-        path: '/usr/bin/rust-analyzer',
-        args: [],
-        syncInit: true,
-    }]
-endif
-
-var LspOptions = {
-    autoComplete: false,
-    omniComplete: true,
-    showInlayHints: false,
-    useBufferCompletion: false,
-    filterCompletionDuplicates: true,
-    showSignature: true,
-    snippetSupport: false,
-    popupBorder: true,
-}
 g:termdebug_config = {
     evaluate_in_popup: true,
     wide: 163,
     variables_window: true,
     variables_window_height: 15
 }
-g:vim_json_warnings = 0
+g:vim_json_warnings = false
 g:helptoc = {'shell_prompt': '^\[\w\+@\w\+\s.\+\]\d*\$\s.*$'}
 g:saveroot_nomatch = "current"
 g:EditorConfig_max_line_indicator = "none"
-g:vim_markdown_math = 1
+g:vim_markdown_math = true
 
 g:fuzzbox_keymaps = {
     'menu_up': ["\<C-k>", "\<C-p>", "\<Up>"],
     'menu_down': ["\<C-j>", "\<C-n>", "\<Down>"],
 }
-g:fuzzbox_preview = 0
-g:fuzzbox_scrollbar = 1
+g:fuzzbox_preview = false
+g:fuzzbox_scrollbar = true
 
 augroup Custom
     au!
@@ -231,33 +179,11 @@ augroup Custom
     au FileType qf,fugitive Use_q_AsExit()
     au CmdWinEnter * Use_q_AsExit()
     au BufReadPost * {
-        var line = line("'\"")
+        var line: number = line("'\"")
         if !exists("g:SessionLoad") && line >= 1 && line <= line("$") && &filetype !~# 'commit'
                 && index(['xxd', 'gitrebase'], &filetype) == -1
             :execute "normal! g`\""
         endif
-    }
-    au Filetype c,cpp,python,rust ++once {
-        if &buftype == ""
-            :packadd lsp
-            silent! :helptags ALL
-        endif
-    }
-    au User LspSetup {
-        silent! :helptags ALL
-
-        call LspOptionsSet(LspOptions)
-        call LspAddServer(LspServers)
-
-        augroup LspAttach
-            au!
-            au User LspAttached OnLspAttach() | b:lsp_set = true
-            au FileType c,cpp,python,rust if !exists("b:lsp_set") | OnLspAttach() | endif
-        augroup END
-    }
-    au FileType rust {
-        &makeprg = "cargo --color=always $*"
-        :compiler cargo
     }
     au VimResume * :silent! checktime
     au VimResized * {
@@ -270,8 +196,8 @@ augroup Custom
     }
     au BufWinLeave ?* :silent! mkview!
     au User TermdebugStartPre {
-        var nr = bufnr("%")
-        var save_cursor = getcurpos()
+        var nr: number = bufnr("%")
+        var save_cursor: list<number> = getcurpos()
         g:termdebug_lasttab = tabpagenr()
 
         :tabnew
@@ -312,40 +238,12 @@ augroup Custom
     }
 augroup END
 
-command! DiffOrig DiffOrig()
-command! SynStack SynStack()
+import autoload "./autoload/misc.vim" as misc
+
+command! DiffOrig misc.DiffOrig()
+command! SynStack misc.SynStack()
+command! TrimWhitespace misc.TrimWhitespace()
 command -nargs=* -complete=file Make make! <args>
-
-def OnLspAttach(): void
-    setlocal tagfunc=lsp#lsp#TagFunc
-    setlocal omnifunc=g:LspOmniFunc
-    # setlocal keywordprg=:LspHover
-    # setlocal formatexpr=lsp#lsp#FormatExpr()
-
-    noremap <buffer> <leader>g <cmd>LspDiag current<cr>
-    noremap <buffer> <leader>= :LspFormat<cr>
-    noremap <buffer> <leader>sh <cmd>LspSwitchSourceHeader<cr>
-    noremap <buffer> <leader>hh <cmd>LspHighlight<cr>
-    noremap <buffer> <leader>hc <cmd>LspHighlightClear<cr>
-    noremap <buffer> <leader>a <cmd>LspCodeAction<cr>
-    noremap <buffer> <leader>dd <cmd>LspGotoDeclaration<cr>
-    noremap <buffer> <leader>de <cmd>LspGotoDefinition<cr>
-    noremap <buffer> <leader>sr <cmd>LspShowReferences<cr>
-    noremap <buffer> <leader>R <cmd>LspRename<cr>
-    noremap <buffer> <leader>dp <cmd>LspDiagPrev<cr>
-    noremap <buffer> <leader>dn <cmd>LspDiagNext<cr>
-    noremap <buffer> <leader>L <cmd>LspDiagShow<cr>
-    noremap <buffer> <leader>lf <cmd>LspDocumentSymbol<cr>
-    noremap <buffer> <leader>ss <cmd>LspShowSignature<cr>
-    noremap <buffer> <leader>lh <cmd>LspHover<cr>
-    inoremap <buffer> <C-X><C-X> <cmd>LspShowSignature<cr>
-enddef
-
-def PreciseTrimWhiteSpace(): void
-    var saved_view: dict<number> = winsaveview()
-    :keepjumps exe ":%s/\\s\\+$//ge"
-    winrestview(saved_view)
-enddef
 
 def Use_q_AsExit(): void
     nnoremap <nowait> <buffer> q <cmd>q<cr>
@@ -356,34 +254,6 @@ def AddTermdebug(): void
     if !get(g:, "termdebug_loaded")
         packadd termdebug
     endif
-enddef
-
-export def DiffOrig(): void
-    var prev_file: number = bufnr()
-    var prev_syn: string = &syntax
-    :vertical new
-    var scratch_buf: number = bufnr()
-    set bt=nofile
-    &syntax = prev_syn
-    :execute 'read ++edit ' .. bufname(prev_file)
-    deletebufline(scratch_buf, 1)
-    :diffthis
-    :wincmd p
-    :diffthis
-    g:__diffoff_buf = scratch_buf
-
-    command DiffOff {
-        execute 'bdelete ' .. g:__diffoff_buf
-        unlet g:__diffoff_buf
-        delc DiffOff
-    }
-enddef
-
-def SynStack(): void
-  if !exists("*synstack")
-    return
-  endif
-  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 enddef
 
 def GetCwd(): string
