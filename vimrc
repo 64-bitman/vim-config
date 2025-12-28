@@ -8,6 +8,7 @@ vim9script
 :packadd! cfilter
 :packadd! matchit
 :packadd! vim-fugitive
+:packadd osc52
 :runtime ftplugin/man.vim
 
 :packadd! conflict-marker.vim
@@ -15,6 +16,7 @@ vim9script
 silent! :helptags ALL
 
 set termguicolors
+set clipmethod+=osc52
 
 if &term == "xterm-kitty"
     runtime kitty.vim
@@ -66,8 +68,8 @@ nnoremap <leader>bn <cmd>bn<cr>
 nnoremap <leader>bp <cmd>bp<cr>
 nnoremap <leader>o o<esc>
 nnoremap <leader>O O<esc>
-nnoremap <leader>m <cmd>ls<CR>:b<Space>
-nnoremap <leader>M <cmd>ls<CR>:bd<Space>
+nnoremap <leader>m <cmd>FuzzyBuffer<CR>
+nnoremap <leader>fa <cmd>FuzzyFilesRoot<CR>
 nnoremap <S-Tab> <C-o>
 noremap <C-j> <C-d>
 noremap <C-k> <C-u>
@@ -80,7 +82,6 @@ for i in range(1, 9)
     execute "nnoremap <C-w>" .. i .. " <cmd>silent! tabn " .. i .. "<CR>"
     execute "tnoremap <C-w>" .. i .. " <cmd>silent! tabn " .. i .. "<CR>"
 endfor
-nnoremap <C-t> <cmd>tab term<cr>
 noremap <leader>q <cmd>stop<cr>
 noremap <leader>e <cmd>wqa<cr>
 noremap <leader>h <cmd>HelpToc<cr>
@@ -300,18 +301,15 @@ augroup Custom
     au FocusLost * {
         if expand("%:p") != ""
             :silent! checktime
-            :wa
+            :silent! wa
         endif
     }
     au WinClosed * {
         wincmd p
     }
-    # au User FuzzboxOpened {
-    #     :silent! LspServer stop
-    # }
-    # au User FuzzboxClosed {
-    #     :silent! LspServer start
-    # }
+    au User FuzzboxOpened {
+        execute("write " .. fnameescape(bufname(bufnr("%"))), "silent!")
+    }
 augroup END
 
 command! DiffOrig DiffOrig()
