@@ -48,6 +48,12 @@ var LspServers: list<dict<any>> = [
         filetype: ['typst'],
         path: 'tinymist',
         args: ['lsp'],
+    },
+    {
+        name: 'luals',
+        filetype: ['lua'],
+        path: 'lua-language-server',
+        args: []
     }
 ]
 

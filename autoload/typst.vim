@@ -130,7 +130,7 @@ export def Watch(...args: list<string>): void
     if open
         cmd += ["--open"]
     endif
-
+    
     typst_job = job_start(cmd, {
         err_mode: "raw",
         err_cb: WatchErrCallback,
