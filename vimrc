@@ -53,7 +53,6 @@ augroup ColorschemeCustom
         hi PmenuMatchSel ctermbg=237 guibg=#212121
         hi! link PmenuExtraSel PmenuSel
 
-
         highlight ConflictMarkerOurs guibg=#2e5049
         highlight ConflictMarkerTheirs guibg=#344f69
         highlight ConflictMarkerCommonAncestorsHunk guibg=#754a81
@@ -166,7 +165,7 @@ augroup Custom
     au FileType * {
         setlocal formatoptions+=cqjno
         if &makeprg == "make"
-            setlocal makeprg=make\ -j12
+            setlocal makeprg=bear\ --\ make\ -j12
         endif
     }
     au BufEnter,TerminalWinOpen * {
