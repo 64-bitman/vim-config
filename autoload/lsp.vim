@@ -95,5 +95,6 @@ augroup CustomLsp
         noremap <buffer> <leader>lh <cmd>LspHover<cr>
         inoremap <buffer> <C-X><C-X> <cmd>LspShowSignature<cr>
     }
+    au User LspProgressUpdate redrawstatus
 augroup END
     

@@ -131,7 +131,6 @@ set encoding=utf8 ffs=unix,dos,mac termwinscroll=100000
 set showmatch matchtime=1 matchpairs+=<:> ttimeoutlen=0 wrapmargin=15 shortmess-=S
 set spelllang=en_ca,en_us,en_gb spelloptions=camel spellsuggest=best,20 dictionary+=/usr/share/dict/words complete+=k
 set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case grepformat+=%f:%l:%c:%m
-&statusline = " %f%m%r%h %w%y %= CWD: %{" .. expand("<SID>") .. "GetCwd()}  (%l,%c) [%p%%,%P]"
 
 if has("win32")
     set shell=pwsh
@@ -260,7 +259,7 @@ enddef
 
 def GetCwd(): string
     var cwd: string = substitute(getcwd(0, 0), $HOME, '~', '')
-    const max_len: number = 50
+    const max_len: number = 25
 
     while len(cwd) > max_len
         cwd = cwd[stridx(cwd, '/') + 1 :]
@@ -268,3 +267,44 @@ def GetCwd(): string
 
     return cwd
 enddef
+
+def LspProgress(): string
+    var progress: dict<any> = get(g:, "LspProgress", {})
+
+    if empty(progress)
+        return ""
+    endif
+
+    var res: list<string> = []
+
+    for info in values(progress)
+        var p: string = "0%%"
+
+        if info.percentage >= 0
+            p = string(info.percentage) .. "%%"
+        endif
+
+        var str: list<string> =<< trim eval END
+        LSP: {info.serverName}
+        {info.title} {info.message} completed {p}
+        END
+
+        res->add(str->join(" "))
+    endfor
+
+    return res->join(", ")
+enddef
+
+def StatusLine(): string
+    var status: list<string> =<< trim eval END
+    %f%m%r%h %w%y
+    %=
+    {LspProgress()}
+    %=
+    CWD: {GetCwd()}  (%l, %c) [%p%%,%P]
+    END
+
+    return " " .. status->join(" ")
+enddef
+
+&statusline = $"%{{%{expand("<SID>")}StatusLine()%}}"
