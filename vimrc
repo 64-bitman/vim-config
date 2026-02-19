@@ -236,6 +236,8 @@ augroup Custom
     au User FuzzboxOpened {
         execute("write " .. fnameescape(bufname(bufnr("%"))), "silent!")
     }
+    autocmd CmdlineEnter [\/\?:] set hlsearch
+    autocmd CmdlineLeave [\/\?:] set nohlsearch
 augroup END
 
 import autoload "./autoload/misc.vim" as misc
