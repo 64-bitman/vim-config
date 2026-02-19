@@ -234,8 +234,29 @@ augroup Custom
     au User FuzzboxOpened {
         execute("write " .. fnameescape(bufname(bufnr("%"))), "silent!")
     }
-    autocmd CmdlineEnter [\/\?:] set hlsearch
-    autocmd CmdlineLeave [\/\?:] set nohlsearch
+    autocmd CmdlineEnter [\/\?] set hlsearch
+    autocmd CmdlineLeave [\/\?] set nohlsearch
+    autocmd CmdlineChanged \: {
+        const cmd: string = fullcommand(getcmdline())
+        const cmds: list<string> = [
+            "global",
+            "lvimgrep",
+            "lvimgrepadd",
+            "smagic",
+            "snomagic",
+            "sort",
+            "substitute",
+            "vglobal",
+            "vimgrep",
+            "vimgrepadd"
+        ]
+
+        if index(cmds, cmd) == -1
+            set nohlsearch
+        else
+            set hlsearch
+        endif
+    }
 augroup END
 
 import autoload "./autoload/misc.vim" as misc
