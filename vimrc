@@ -1,6 +1,7 @@
 vim9script
 
 :packadd! comment
+
 # :packadd! editorconfig
 :packadd! hlyank
 :packadd! helptoc
@@ -157,22 +158,29 @@ g:fuzzbox_keymaps = {
     'menu_up': ["\<C-k>", "\<C-p>", "\<Up>"],
     'menu_down': ["\<C-j>", "\<C-n>", "\<Down>"],
 }
+g:fuzzbox_window_defaults = {
+    'maxwidth': 0.8,
+    'minwidth': 0.8,
+    'maxheight': 0.8,
+    'minheight': 0.8,
+}
 g:fuzzbox_preview = false
 g:fuzzbox_scrollbar = true
+# g:fuzzbox_selection_sign = ''
 
 augroup Custom
     au!
     au FileType * {
         setlocal formatoptions+=cqjno
         if &makeprg == "make"
-            setlocal makeprg=bear\ --\ make\ -j12
+            setlocal makeprg=make\ -j12
         endif
     }
-    au BufEnter,TerminalWinOpen * {
-        if &buftype == "terminal"
-            setlocal wincolor=Terminal nonumber norelativenumber fillchars+=eob:\ 
-        endif
-    }
+    # au BufEnter,TerminalWinOpen * {
+    #     if &buftype == "terminal"
+    #         setlocal wincolor=Terminal nonumber norelativenumber fillchars+=eob:\ 
+    #     endif
+    # }
     au BufRead,BufNewFile *.h setlocal filetype=c
     au FileType qf,fugitive Use_q_AsExit()
     au CmdWinEnter * Use_q_AsExit()
@@ -184,9 +192,6 @@ augroup Custom
         endif
     }
     au VimResume * :silent! checktime
-    au VimResized * {
-        :wincmd =
-    }
     au VimLeavePre * {
         if v:this_session != ""
             execute ':mksession! ' .. v:this_session
@@ -228,14 +233,10 @@ augroup Custom
             :silent! wa
         endif
     }
-    au WinClosed * {
-        wincmd p
-    }
-    au User FuzzboxOpened {
-        execute("write " .. fnameescape(bufname(bufnr("%"))), "silent!")
-    }
-    autocmd CmdlineEnter [\/\?] set hlsearch
-    autocmd CmdlineLeave [\/\?] set nohlsearch
+    au WinClosed * wincmd p
+    au User FuzzboxOpened execute("write " .. fnameescape(bufname(bufnr("%"))), "silent!")
+    autocmd CmdlineEnter [\/\?] SetSearchHl(winnr(), true)
+    autocmd CmdlineLeave [\/\?] SetSearchHl(winnr(), false)
     autocmd CmdlineChanged \: {
         const cmd: string = fullcommand(getcmdline())
         const cmds: list<string> = [
@@ -251,11 +252,7 @@ augroup Custom
             "vimgrepadd"
         ]
 
-        if index(cmds, cmd) == -1
-            set nohlsearch
-        else
-            set hlsearch
-        endif
+        SetSearchHl(winnr(), index(cmds, cmd) != -1)
     }
 augroup END
 
@@ -286,6 +283,25 @@ def GetCwd(): string
     endwhile
 
     return cwd
+enddef
+
+def SetSearchHl(winnr: number, clear: bool): void
+    if clear
+        set hlsearch
+    else
+        set nohlsearch
+    endif
+
+    for w in range(1, winnr('$'))
+        if w == winnr
+            continue
+        endif
+        if clear
+            setwinvar(w, "&winhighlight", "Search:NONE")
+        else
+            setwinvar(w, "&winhighlight", "")
+        endif
+    endfor
 enddef
 
 def LspProgress(): string
