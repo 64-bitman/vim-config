@@ -340,7 +340,7 @@ def StatusLine(): string
     CWD: {GetCwd()}  (%l, %c) [%p%%,%P]
     END
 
-    return " " .. status->join(" ")
+    return status->join(" ")
 enddef
 
 &statusline = $"%{{%{expand("<SID>")}StatusLine()%}}"
