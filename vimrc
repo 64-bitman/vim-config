@@ -236,7 +236,11 @@ augroup Custom
     au WinClosed * wincmd p
     au User FuzzboxOpened execute("write " .. fnameescape(bufname(bufnr("%"))), "silent!")
     autocmd CmdlineEnter [\/\?] SetSearchHl(winnr(), true)
-    autocmd CmdlineLeave [\/\?] SetSearchHl(winnr(), false)
+    autocmd CmdlineLeave [\/\?\:] {
+        if &hlsearch
+            SetSearchHl(winnr(), false)
+        endif
+    }
     autocmd CmdlineChanged \: {
         const cmd: string = fullcommand(getcmdline())
         const cmds: list<string> = [
@@ -252,7 +256,9 @@ augroup Custom
             "vimgrepadd"
         ]
 
-        SetSearchHl(winnr(), index(cmds, cmd) != -1)
+        if index(cmds, cmd) != -1
+            SetSearchHl(winnr(), true)
+        endif
     }
 augroup END
 
@@ -286,20 +292,25 @@ def GetCwd(): string
 enddef
 
 def SetSearchHl(winnr: number, clear: bool): void
-    if clear
-        set hlsearch
-    else
-        set nohlsearch
-    endif
+    &hlsearch = clear
 
     for w in range(1, winnr('$'))
         if w == winnr
             continue
         endif
+
         if clear
-            setwinvar(w, "&winhighlight", "Search:NONE")
+            if &winhighlight == ""
+                setwinvar(w, "prev_whl", "")
+                setwinvar(w, "&winhighlight", "Search:NONE")
+            else
+                var whl = getwinvar(w, "&winhighlight")
+
+                setwinvar(w, "prev_whl", whl)
+                setwinvar(w, "&winhighlight", $"{whl},Search:NONE")
+            endif
         else
-            setwinvar(w, "&winhighlight", "")
+            setwinvar(w, "&winhighlight", getwinvar(w, "prev_whl"))
         endif
     endfor
 enddef
