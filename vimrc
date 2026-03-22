@@ -155,8 +155,10 @@ g:EditorConfig_max_line_indicator = "none"
 g:vim_markdown_math = true
 
 g:fuzzbox_keymaps = {
-    'menu_up': ["\<C-k>", "\<C-p>", "\<Up>"],
-    'menu_down': ["\<C-j>", "\<C-n>", "\<Down>"],
+    menu_up: ["\<C-k>", "\<C-p>", "\<Up>"],
+    menu_down: ["\<C-j>", "\<C-n>", "\<Down>"],
+    menu_page_up: ["\<A-k>"],
+    menu_page_down: ["\<A-j>"],
 }
 g:fuzzbox_window_defaults = {
     'maxwidth': 0.8,
@@ -176,11 +178,6 @@ augroup Custom
             setlocal makeprg=make\ -j12
         endif
     }
-    # au BufEnter,TerminalWinOpen * {
-    #     if &buftype == "terminal"
-    #         setlocal wincolor=Terminal nonumber norelativenumber fillchars+=eob:\ 
-    #     endif
-    # }
     au BufRead,BufNewFile *.h setlocal filetype=c
     au FileType qf,fugitive Use_q_AsExit()
     au CmdWinEnter * Use_q_AsExit()
@@ -285,7 +282,14 @@ def GetCwd(): string
     const max_len: number = 25
 
     while len(cwd) > max_len
-        cwd = cwd[stridx(cwd, '/') + 1 :]
+        const slash: number = stridx(cwd, '/')
+
+        if slash == -1
+            cwd = '…' .. cwd[-max_len + 1 :]
+            break
+        endif
+
+        cwd = cwd[slash + 1 :]
     endwhile
 
     return cwd
