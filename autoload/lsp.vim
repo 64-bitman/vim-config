@@ -46,9 +46,12 @@ var LspServers: list<dict<any>> = [
     }
 ]
 
-for [idx: number, server: dict<any>] in items(LspServers)
-    if !executable(server.path)
-        remove(LspServers, idx)
+var ActualLspServers: list<dict<any>> = []
+
+for server: dict<any> in LspServers
+    if executable(server.path)
+        ActualLspServers->add(server)
+    else
         continue
     endif
 

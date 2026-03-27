@@ -277,22 +277,28 @@ def AddTermdebug(): void
     endif
 enddef
 
+var path_sep: string = '/'
+
+if has('win32')
+    path_sep = '\'
+endif
+
 def GetCwd(): string
     var cwd: string = substitute(getcwd(0, 0), $HOME, '~', '')
-    const max_len: number = 25
+    const max_len: number = float2nr(winwidth(0) * 0.25) - 2
+    var cutoff: bool = false
 
     while len(cwd) > max_len
-        const slash: number = stridx(cwd, '/')
-
-        if slash == -1
-            cwd = '…' .. cwd[-max_len + 1 :]
-            break
-        endif
-
+        const slash: number = stridx(cwd, path_sep)
         cwd = cwd[slash + 1 :]
+        cutoff = true
     endwhile
 
-    return cwd
+    if cutoff
+        return $'…{path_sep}{cwd}'
+    else
+        return cwd
+    endif
 enddef
 
 def SetSearchHl(winnr: number, clear: bool): void
