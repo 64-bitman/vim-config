@@ -49,7 +49,7 @@ var LspServers: list<dict<any>> = [
 var ActualLspServers: list<dict<any>> = []
 
 for server: dict<any> in LspServers
-    if executable(server.path)
+    if executable(server.path) == 1
         ActualLspServers->add(server)
     else
         continue
@@ -72,7 +72,7 @@ enddef
 augroup CustomLsp
     au User LspSetup {
         g:LspOptionsSet(LspOptions)
-        g:LspAddServer(LspServers)
+        g:LspAddServer(ActualLspServers)
     }
     au User LspAttached {
         setlocal tagfunc=lsp#lsp#TagFunc
