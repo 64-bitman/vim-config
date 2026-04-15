@@ -290,6 +290,11 @@ def GetCwd(): string
 
     while len(cwd) > max_len
         const slash: number = stridx(cwd, path_sep)
+
+        if slash == -1
+            break
+        endif
+
         cwd = cwd[slash + 1 :]
         cutoff = true
     endwhile
