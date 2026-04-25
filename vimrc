@@ -260,11 +260,12 @@ augroup Custom
 augroup END
 
 import autoload "./autoload/misc.vim" as misc
+import autoload "./autoload/make.vim" as mk
 
 command! DiffOrig misc.DiffOrig()
 command! SynStack misc.SynStack()
 command! TrimWhitespace misc.TrimWhitespace()
-command -nargs=* -complete=file Make make! <args>
+command! -bang -nargs=* -complete=custom,mk.MakeComplete Make mk.DoMake("<bang>" == "!", <q-args>)
 
 def Use_q_AsExit(): void
     nnoremap <nowait> <buffer> q <cmd>q<cr>
