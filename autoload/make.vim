@@ -1,29 +1,46 @@
 vim9script
 
-var cur_buf = -1
+var cur_buf: number = -1
+var cur_win: number = -1
+var cur_title: string = ""
+
+augroup CustomMake
+    au!
+    au WinClosed * {
+        if cur_win == str2nr(expand("<afile>"))
+            cur_win = -1
+        endif
+    }
+augroup END
 
 export def DoMake(bang: bool, args: string): void
+    if bang
+        OpenMake()
+        return
+    endif
+    if cur_win != -1
+        popup_close(cur_win)
+    endif
     if cur_buf != -1
         execute($":bw! {cur_buf}")
     endif
 
-    var cmd: string = expandcmd(&makeprg) .. " " .. args
-    var title: string = ":make" .. (bang ? "!" : "") .. " " .. args
+    var cmd: string = $"{expandcmd(&makeprg)} {args}"
 
-    write
-    tabnew
+    cur_title = $":make {args}"
 
     var buf: number = term_start(cmd, {
-        term_name: title,
-        hidden: bang,
+        term_name: cur_title,
         term_finish: "open",
-        curwin: true,
-        norestore: true
+        norestore: true,
+        hidden: true
     })
     cur_buf = buf
-    execute($"autocmd BufDelete <buffer={buf}> ++once cur_buf = -1")
 
-    setlocal nonumber norelativenumber fillchars+=eob:\  winhighlight+=!(:Terminal
+    setbufvar(buf, "&number", false)
+    setbufvar(buf, "&relativenumber", false)
+
+    OpenMake()
 
     var job: job = term_getjob(buf)
 
@@ -32,16 +49,34 @@ export def DoMake(bang: bool, args: string): void
             term_wait(buf)
 
             execute($"cgetbuffer {buf}")
-            setqflist([], 'r', {title: title})
-
-            var cur: number = bufnr('%')
-
-            execute('buffer ' .. buf)
-            nnoremap <nowait> <buffer> q <cmd>quit!<cr>
-            nnoremap <nowait> <buffer> <C-q> q
-            execute('buffer ' .. cur)
+            setqflist([], 'r', {title: cur_title})
         }
     })
+enddef
+
+def OpenMake(): void
+    if cur_win != -1 || cur_buf == -1
+        return
+    endif
+
+    cur_win = popup_create(cur_buf, {
+        pos: "center",
+        title: cur_title,
+        zindex: 32000,
+        resize: false,
+        drag: false,
+        border: [1, 1, 1, 1],
+        minwidth: float2nr(&columns * 0.90),
+        minheight: float2nr(&lines * 0.85),
+        highlight: "Terminal",
+        callback: (winid, _) => {
+            cur_win = -1
+        }
+    })
+
+    win_execute(cur_win, "setlocal fillchars+=eob:\\ ")
+    execute($"nnoremap <nowait> <buffer> q <cmd>call popup_close({cur_win})<cr>")
+    nnoremap <nowait> <buffer> <C-q> q
 enddef
 
 # Taken from habamax

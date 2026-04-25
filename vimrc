@@ -230,7 +230,7 @@ augroup Custom
             :silent! wa
         endif
     }
-    au WinClosed * wincmd p
+    au WinClosed * silent! wincmd p
     au User FuzzboxOpened execute("write " .. fnameescape(bufname(bufnr("%"))), "silent!")
     autocmd CmdlineEnter [\/\?] SetSearchHl(winnr(), true)
     autocmd CmdlineLeave [\/\?\:] {
