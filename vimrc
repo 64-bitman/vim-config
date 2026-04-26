@@ -122,7 +122,7 @@ set wildmenu completeopt=menuone,preview,popup wildignorecase wildoptions=pum pu
 set expandtab tabstop=4 softtabstop=4 shiftwidth=4 shiftround smarttab smartindent autoindent
 set nohlsearch incsearch ignorecase smartcase nojoinspaces virtualedit=block
 set lazyredraw signcolumn=number omnifunc=syntaxcomplete#Complete
-set linebreak scrolloff=10 wrap nostartofline cpoptions+=n nofoldenable foldlevelstart=99 foldmethod=indent showbreak=>>>\
+set linebreak scrolloff=10 wrap nostartofline cpoptions+=n nofoldenable foldlevelstart=99 foldmethod=indent showbreak=>>>\ 
 set autoread autowrite backspace=indent,eol,start textwidth=80
 set backupcopy=auto backup writebackup undofile
 set nohidden history=1000 sessionoptions-=options sessionoptions-=folds viewoptions-=cursor
@@ -308,6 +308,10 @@ def GetCwd(): string
 enddef
 
 def SetSearchHl(winnr: number, clear: bool): void
+    if win_gettype() == "popup"
+        return
+    endif
+
     &hlsearch = clear
 
     for w in range(1, winnr('$'))
@@ -320,7 +324,7 @@ def SetSearchHl(winnr: number, clear: bool): void
                 setwinvar(w, "prev_whl", "")
                 setwinvar(w, "&winhighlight", "Search:NONE")
             else
-                var whl = getwinvar(w, "&winhighlight")
+                var whl: string = getwinvar(w, "&winhighlight")
 
                 setwinvar(w, "prev_whl", whl)
                 setwinvar(w, "&winhighlight", $"{whl},Search:NONE")

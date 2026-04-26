@@ -25,6 +25,10 @@ export def DoMake(bang: bool, args: string): void
         execute($":bw! {cur_buf}")
     endif
 
+    if &autowrite
+        wall
+    endif
+
     var cmd: string = $"{expandcmd(&makeprg)} {args}"
 
     cur_title = $":make {args}"
@@ -59,15 +63,21 @@ def OpenMake(): void
         return
     endif
 
+    var width: number = float2nr(&columns * 0.90)
+    var height: number = float2nr(&lines * 0.85)
+
     cur_win = popup_create(cur_buf, {
         pos: "center",
         title: cur_title,
         zindex: 32000,
         resize: false,
         drag: false,
+        wrap: true,
         border: [1, 1, 1, 1],
-        minwidth: float2nr(&columns * 0.90),
-        minheight: float2nr(&lines * 0.85),
+        minwidth: width,
+        minheight: height,
+        maxwidth: width,
+        maxheight: height,
         highlight: "Terminal",
         callback: (winid, _) => {
             cur_win = -1
