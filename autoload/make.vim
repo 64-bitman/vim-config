@@ -64,7 +64,7 @@ def OpenMake(): void
     endif
 
     var width: number = float2nr(&columns * 0.90)
-    var height: number = float2nr(&lines * 0.85)
+    var height: number = float2nr((&lines - 2) * 0.85) - 2
 
     cur_win = popup_create(cur_buf, {
         pos: "center",
