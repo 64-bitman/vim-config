@@ -14,7 +14,7 @@ var LspOptions: dict<bool> = {
 var LspServers: list<dict<any>> = [
     {
         name: 'clangd',
-        filetype: ['c', 'cpp'],
+        filetype: ['c', 'cpp', 'objc'],
         path: 'clangd',
         args: [
             '--background-index',
