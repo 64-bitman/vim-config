@@ -175,7 +175,11 @@ augroup Custom
     au FileType * {
         setlocal formatoptions+=cqjno
         if &makeprg == "make"
-            setlocal makeprg=make\ -j12
+            if has('windows')
+                setlocal makeprg=nmake
+            else
+                setlocal makeprg=make\ -j12
+            endif
         endif
     }
     au BufRead,BufNewFile *.h setlocal filetype=c
