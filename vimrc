@@ -140,6 +140,9 @@ if has("win32")
     set backupdir^=~/vimfiles/backup
     set directory^=~/vimfiles/swap
     set belloff=all
+    if &term == "win32"
+        set termsync
+    endif
 endif
 
 g:termdebug_config = {
@@ -242,6 +245,7 @@ augroup Custom
             SetSearchHl(winnr(), false)
         endif
     }
+    autocmd TabLeave * silent! write
     autocmd CmdlineChanged \: {
         const cmd: string = fullcommand(getcmdline())
         const cmds: list<string> = [
