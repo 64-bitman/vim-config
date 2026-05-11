@@ -173,12 +173,14 @@ g:fuzzbox_preview = false
 g:fuzzbox_scrollbar = true
 # g:fuzzbox_selection_sign = ''
 
+g:hlput_enable = true
+
 augroup Custom
     au!
     au FileType * {
         setlocal formatoptions+=cqjno
         if &makeprg == "make"
-            if has('windows')
+            if has('win32')
                 setlocal makeprg=nmake
             else
                 setlocal makeprg=make\ -j12
