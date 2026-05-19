@@ -79,7 +79,8 @@ def OpenMake(): void
         maxwidth: width,
         maxheight: height,
         highlight: "Terminal",
-        callback: (winid, _) => {
+        borderchars: ['─', '│', '─', '│', '╭', '╮', '╯', '╰'],
+        callback: (_, _) => {
             cur_win = -1
         }
     })

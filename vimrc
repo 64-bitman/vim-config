@@ -272,6 +272,9 @@ augroup END
 import autoload "./autoload/misc.vim" as misc
 import autoload "./autoload/make.vim" as mk
 
+nnoremap <silent> <leader>a <ScriptCmd>misc.ToggleCC()<cr>
+nnoremap <silent> <leader>A <ScriptCmd>misc.ToggleCC(true)<cr>
+
 command! DiffOrig misc.DiffOrig()
 command! SynStack misc.SynStack()
 command! TrimWhitespace misc.TrimWhitespace()
