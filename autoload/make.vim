@@ -4,15 +4,6 @@ var cur_buf: number = -1
 var cur_win: number = -1
 var cur_title: string = ""
 
-augroup CustomMake
-    au!
-    au WinClosed * {
-        if cur_win == str2nr(expand("<afile>"))
-            cur_win = -1
-        endif
-    }
-augroup END
-
 export def DoMake(bang: bool, args: string): void
     if bang
         OpenMake()
