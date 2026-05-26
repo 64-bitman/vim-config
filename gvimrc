@@ -8,5 +8,6 @@ if has('win32')
     set lines=40 columns=150
     set guifont=CommitMonoTTF:h10:cANSI:qDRAFT
 else
+    " set guifont=Fira\ Code
     set guifont=CommitMono
 endif

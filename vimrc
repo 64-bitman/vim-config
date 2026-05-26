@@ -66,8 +66,8 @@ nnoremap <leader>bn <cmd>bn<cr>
 nnoremap <leader>bp <cmd>bp<cr>
 nnoremap <leader>o o<esc>
 nnoremap <leader>O O<esc>
-nnoremap <leader>m <cmd>FuzzyBuffer<CR>
 nnoremap <leader>fa <cmd>FuzzyFilesRoot<CR>
+nnoremap <leader>fr <cmd>FuzzyRegisters<CR>
 nnoremap <S-Tab> <C-o>
 noremap <C-j> <C-d>
 noremap <C-k> <C-u>
@@ -143,6 +143,9 @@ if has("win32")
     if &term == "win32"
         set termsync
     endif
+else
+    set viminfofile=~/.config/vim/viminfo
+    set viminfo+=n~/.config/vi/viminfo
 endif
 
 g:termdebug_config = {
