@@ -178,18 +178,46 @@ g:fuzzbox_scrollbar = true
 
 g:hlput_enable = true
 
+def FileTypeAutocmd(): void
+    setlocal formatoptions+=cqjno
+    if &makeprg == "make"
+        if has('win32')
+            setlocal makeprg=nmake
+        else
+            setlocal makeprg=make\ -j12
+        endif
+    endif
+enddef
+
+def UnsetSearchHl(): void
+    if &hlsearch
+        SetSearchHl(winnr(), false)
+    endif
+enddef
+
+def UpdateSearchHl(): void
+    const cmd: string = fullcommand(getcmdline())
+    const cmds: list<string> = [
+        "global",
+        "lvimgrep",
+        "lvimgrepadd",
+        "smagic",
+        "snomagic",
+        "sort",
+        "substitute",
+        "vglobal",
+        "vimgrep",
+        "vimgrepadd"
+    ]
+
+    if index(cmds, cmd) != -1
+        SetSearchHl(winnr(), true)
+    endif
+enddef
+
 augroup Custom
     au!
-    au FileType * {
-        setlocal formatoptions+=cqjno
-        if &makeprg == "make"
-            if has('win32')
-                setlocal makeprg=nmake
-            else
-                setlocal makeprg=make\ -j12
-            endif
-        endif
-    }
+    au FileType * FileTypeAutocmd()
     au BufRead,BufNewFile *.h setlocal filetype=c
     au FileType qf,fugitive Use_q_AsExit()
     au CmdWinEnter * Use_q_AsExit()
@@ -245,31 +273,9 @@ augroup Custom
     au WinClosed * silent! wincmd p
     au User FuzzboxOpened execute("write " .. fnameescape(bufname(bufnr("%"))), "silent!")
     autocmd CmdlineEnter [\/\?] SetSearchHl(winnr(), true)
-    autocmd CmdlineLeave [\/\?\:] {
-        if &hlsearch
-            SetSearchHl(winnr(), false)
-        endif
-    }
+    autocmd CmdlineLeave [\/\?\:] UnsetSearchHl()
     autocmd TabLeave * silent! write
-    autocmd CmdlineChanged \: {
-        const cmd: string = fullcommand(getcmdline())
-        const cmds: list<string> = [
-            "global",
-            "lvimgrep",
-            "lvimgrepadd",
-            "smagic",
-            "snomagic",
-            "sort",
-            "substitute",
-            "vglobal",
-            "vimgrep",
-            "vimgrepadd"
-        ]
-
-        if index(cmds, cmd) != -1
-            SetSearchHl(winnr(), true)
-        endif
-    }
+    autocmd CmdlineChanged \: UpdateSearchHl()
 augroup END
 
 import autoload "./autoload/misc.vim" as misc
