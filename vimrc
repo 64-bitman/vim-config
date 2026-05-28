@@ -17,6 +17,10 @@ silent! :helptags ALL
 set termguicolors
 set clipmethod+=osc52
 
+if has('gui_running')
+    setenv("TERM", null)
+endif
+
 if &term == "xterm-kitty"
     runtime kitty.vim
 else
@@ -145,7 +149,7 @@ if has("win32")
     endif
 else
     set viminfofile=~/.config/vim/viminfo
-    set viminfo+=n~/.config/vi/viminfo
+    set viminfo+=n~/.config/vim/viminfo
 endif
 
 g:termdebug_config = {
