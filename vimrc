@@ -135,6 +135,7 @@ set encoding=utf8 ffs=unix,dos,mac termwinscroll=100000
 set showmatch matchtime=1 matchpairs+=<:> ttimeoutlen=0 wrapmargin=15 shortmess-=S
 set spelllang=en_ca,en_us,en_gb spelloptions=camel spellsuggest=best,20 dictionary+=/usr/share/dict/words complete+=k
 set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case grepformat+=%f:%l:%c:%m
+set autoshelldir
 
 if has("win32")
     set shell=pwsh
@@ -219,8 +220,20 @@ def UpdateSearchHl(): void
     endif
 enddef
 
+$VIM_INUSE = true
+def CloseTerminals(): void
+    for b: dict<any> in getbufinfo()
+        if getbufvar(b.bufnr, "&buftype") == "terminal"
+            if getbufvar(b.bufnr, "at_prompt", false)
+                execute($"bwipe! {b.bufnr}")
+            endif
+        endif
+    endfor
+enddef
+
 augroup Custom
     au!
+    au ExitPre * CloseTerminals()
     au FileType * FileTypeAutocmd()
     au BufRead,BufNewFile *.h setlocal filetype=c
     au FileType qf,fugitive Use_q_AsExit()
@@ -292,6 +305,10 @@ command! DiffOrig misc.DiffOrig()
 command! SynStack misc.SynStack()
 command! TrimWhitespace misc.TrimWhitespace()
 command! -bang -nargs=* -complete=custom,mk.MakeComplete Make mk.DoMake("<bang>" == "!", <q-args>)
+
+def g:Tapi_Prompt(buf: number, at_prompt: bool): void
+    setbufvar(buf, "at_prompt", at_prompt)
+enddef
 
 def Use_q_AsExit(): void
     nnoremap <nowait> <buffer> q <cmd>q<cr>
