@@ -37,12 +37,31 @@ var LspServers: list<dict<any>> = [
         filetype: ['typst'],
         path: 'tinymist',
         args: ['lsp'],
+        initializationOptions: {
+            tinymist: {
+                preview: {
+                    background: {
+                        enabled: true,
+                    },
+                    partialRendering: true,
+                    refresh: "onType",
+                    invertColors: "never"
+                },
+                lint: {
+                    enabled: true,
+                    when: "onSave"
+                },
+                formatterMode: "typstyle",
+                formatterPrintWidth: 80,
+                formatterProseWrap: true
+            }
+        }
     },
     {
         name: 'luals',
         filetype: ['lua'],
         path: 'lua-language-server',
-        args: []
+        args: [],
     }
 ]
 
