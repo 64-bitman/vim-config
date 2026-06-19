@@ -7,6 +7,6 @@ g:c_no_bracket_error = 1
 g:c_gnu = 1
 highlight link cParenError NONE
 
-setlocal matchpairs+==:;
+# setlocal matchpairs+==:;
 
 lsp.Load()

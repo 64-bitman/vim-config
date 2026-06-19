@@ -17,10 +17,6 @@ silent! :helptags ALL
 set termguicolors
 set clipmethod+=osc52
 
-if has('gui_running')
-    setenv("TERM", null)
-endif
-
 if &term == "xterm-kitty"
     runtime kitty.vim
 else
@@ -131,7 +127,7 @@ set autoread autowrite backspace=indent,eol,start textwidth=80
 set backupcopy=auto backup writebackup undofile
 set nohidden history=1000 sessionoptions-=options sessionoptions-=folds viewoptions-=cursor
 set diffopt-=inline:simple diffopt+=vertical,inline:char
-set encoding=utf8 ffs=unix,dos,mac termwinscroll=100000
+set encoding=utf8 ffs=unix,dos,mac termwinscroll=5000
 set showmatch matchtime=1 matchpairs+=<:> ttimeoutlen=0 wrapmargin=15 shortmess-=S
 set spelllang=en_ca,en_us,en_gb spelloptions=camel spellsuggest=best,20 dictionary+=/usr/share/dict/words complete+=k
 set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case grepformat+=%f:%l:%c:%m
@@ -221,19 +217,9 @@ def UpdateSearchHl(): void
 enddef
 
 $VIM_INUSE = true
-def CloseTerminals(): void
-    for b: dict<any> in getbufinfo()
-        if getbufvar(b.bufnr, "&buftype") == "terminal"
-            if getbufvar(b.bufnr, "at_prompt", false)
-                execute($"bwipe! {b.bufnr}")
-            endif
-        endif
-    endfor
-enddef
 
 augroup Custom
     au!
-    au ExitPre * CloseTerminals()
     au FileType * FileTypeAutocmd()
     au BufRead,BufNewFile *.h setlocal filetype=c
     au FileType qf,fugitive Use_q_AsExit()
@@ -307,6 +293,11 @@ command! TrimWhitespace misc.TrimWhitespace()
 command! -bang -nargs=* -complete=custom,mk.MakeComplete Make mk.DoMake("<bang>" == "!", <q-args>)
 
 def g:Tapi_Prompt(buf: number, at_prompt: bool): void
+    if at_prompt
+        term_setkill(buf, "hup")
+    else
+        term_setkill(buf, "")
+    endif
     setbufvar(buf, "at_prompt", at_prompt)
 enddef
 
