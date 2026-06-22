@@ -42,10 +42,11 @@ var LspServers: list<dict<any>> = [
                 preview: {
                     background: {
                         enabled: true,
-                    },
-                    partialRendering: true,
-                    refresh: "onType",
-                    invertColors: "never"
+                        args: [
+                            "--invert-colors=never",
+                            "--partial-rendering=true"
+                        ]
+                    }
                 },
                 lint: {
                     enabled: true,
@@ -62,6 +63,12 @@ var LspServers: list<dict<any>> = [
         filetype: ['lua'],
         path: 'lua-language-server',
         args: [],
+    },
+    {
+        name: 'codebook',
+        filetype: ['typst'],
+        path: 'codebook-lsp',
+        args: ['serve']
     }
 ]
 
@@ -81,23 +88,13 @@ for server: dict<any> in LspServers
     endif
 endfor
 
-export def Load(): void
-    if &buftype == ""
-        :packadd lsp
-        :silent! helptags ALL
-    endif
-enddef
+g:LspOptionsSet(LspOptions)
+g:LspAddServer(ActualLspServers)
 
 augroup CustomLsp
-    au User LspSetup {
-        g:LspOptionsSet(LspOptions)
-        g:LspAddServer(ActualLspServers)
-    }
     au User LspAttached {
         setlocal tagfunc=lsp#lsp#TagFunc
         setlocal omnifunc=g:LspOmniFunc
-        # setlocal keywordprg=:LspHover
-        # setlocal formatexpr=lsp#lsp#FormatExpr()
 
         noremap <buffer> <leader>g <cmd>LspDiag current<cr>
         noremap <buffer> <leader>= :LspFormat<cr>
@@ -119,4 +116,3 @@ augroup CustomLsp
     }
     au User LspProgressUpdate redrawstatus!
 augroup END
-    

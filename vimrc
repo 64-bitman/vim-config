@@ -10,7 +10,9 @@ vim9script
 :packadd! matchit
 :packadd! vim-fugitive
 :packadd osc52
+:packadd lsp
 :runtime ftplugin/man.vim
+
 
 silent! :helptags ALL
 
