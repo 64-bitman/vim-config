@@ -91,6 +91,8 @@ endfor
 g:LspOptionsSet(LspOptions)
 g:LspAddServer(ActualLspServers)
 
+import autoload "../autoload/lsp.vim"
+
 augroup CustomLsp
     au User LspAttached {
         setlocal tagfunc=lsp#lsp#TagFunc
@@ -114,5 +116,5 @@ augroup CustomLsp
         noremap <buffer> <leader>lh <cmd>LspHover<cr>
         inoremap <buffer> <C-X><C-X> <cmd>LspShowSignature<cr>
     }
-    au User LspProgressUpdate redrawstatus!
+    au User LspProgressUpdate lsp.ProgressUpdate()
 augroup END

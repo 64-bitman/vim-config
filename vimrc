@@ -1,5 +1,18 @@
 vim9script
 
+if $VIM_SERVERNAME != ""
+    final args: list<string> = [
+        "vim",
+        "--servername", $VIM_SERVERNAME,
+        "--remote-tab"
+    ]
+
+    args->extend(argv(-1))
+    system(args)
+    qall!
+endif
+
+
 :packadd! comment
 
 # :packadd! editorconfig
@@ -12,7 +25,6 @@ vim9script
 :packadd osc52
 :packadd lsp
 :runtime ftplugin/man.vim
-
 
 silent! :helptags ALL
 
@@ -371,38 +383,10 @@ def SetSearchHl(winnr: number, clear: bool): void
     endfor
 enddef
 
-def LspProgress(): string
-    var progress: dict<any> = get(g:, "LspProgress", {})
-
-    if empty(progress)
-        return ""
-    endif
-
-    var res: list<string> = []
-
-    for info in values(progress)
-        var p: string = "0%%"
-
-        if info.percentage >= 0
-            p = string(info.percentage) .. "%%"
-        endif
-
-        var str: list<string> =<< trim eval END
-        LSP: {info.serverName}
-        {info.title} {info.message} completed {p}
-        END
-
-        res->add(str->join(" "))
-    endfor
-
-    return res->join(", ")
-enddef
-
 def StatusLine(): string
     var status: list<string> =<< trim eval END
     %f%m%r%h %w%y
     %=
-    {LspProgress()}
     %=
     CWD: {GetCwd()}  (%l, %c) [%p%%,%P]
     END
