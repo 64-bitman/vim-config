@@ -1,17 +1,16 @@
 vim9script
 
-if $VIM_SERVERNAME != ""
-    final args: list<string> = [
-        "vim",
-        "--servername", $VIM_SERVERNAME,
-        "--remote-tab"
-    ]
+# if $VIM_SERVERNAME != "" && $VIM_SHELL == "1"
+#     final args: list<string> = [
+#         "vim",
+#         "--servername", $VIM_SERVERNAME,
+#         "--remote-tab"
+#     ]
 
-    args->extend(argv(-1))
-    system(args)
-    qall!
-endif
-
+#     args->extend(argv(-1))
+#     system(args)
+#     qall!
+# endif
 
 :packadd! comment
 
@@ -146,6 +145,7 @@ set showmatch matchtime=1 matchpairs+=<:> ttimeoutlen=0 wrapmargin=15 shortmess-
 set spelllang=en_ca,en_us,en_gb spelloptions=camel spellsuggest=best,20 dictionary+=/usr/share/dict/words complete+=k
 set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case grepformat+=%f:%l:%c:%m
 set autoshelldir
+set smoothscroll display=lastline
 
 if has("win32")
     set shell=pwsh
