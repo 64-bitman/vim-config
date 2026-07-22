@@ -13,6 +13,22 @@ var LspOptions: dict<bool> = {
 
 var LspServers: list<dict<any>> = [
     {
+        name: 'ccls',
+        filetype: ['c', 'cpp', 'objc'],
+        path: 'ccls',
+        args: [],
+        initializationOptions: {
+            clang: {
+                extraArgs: ['--gcc-toolchain=/usr']
+            },
+            compilationDatabaseDirectory: 'build',
+            diagnostics: {
+                onChange: 100
+            }
+        }
+    },
+    {
+        conflict: 'ccls',
         name: 'clangd',
         filetype: ['c', 'cpp', 'objc'],
         path: 'clangd',
@@ -79,9 +95,13 @@ var LspServers: list<dict<any>> = [
 ]
 
 var ActualLspServers: list<dict<any>> = []
+var added: list<string> = []
 
 for server: dict<any> in LspServers
-    if executable(server.path) == 1
+    var conflict: string = get(server, 'conflict', '')
+
+    if executable(server.path) == 1 && index(added, conflict) == -1
+        added->add(server.name)
         ActualLspServers->add(server)
     else
         continue
