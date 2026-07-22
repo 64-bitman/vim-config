@@ -69,6 +69,12 @@ var LspServers: list<dict<any>> = [
         filetype: ['typst'],
         path: 'codebook-lsp',
         args: ['serve']
+    },
+    {
+        name: 'ty',
+        filetype: 'python',
+        path: 'ty',
+        args: ['server']
     }
 ]
 
