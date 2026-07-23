@@ -12,21 +12,21 @@ var LspOptions: dict<bool> = {
 }
 
 var LspServers: list<dict<any>> = [
-    {
-        name: 'ccls',
-        filetype: ['c', 'cpp', 'objc'],
-        path: 'ccls',
-        args: [],
-        initializationOptions: {
-            clang: {
-                extraArgs: ['--gcc-toolchain=/usr']
-            },
-            compilationDatabaseDirectory: 'build',
-            diagnostics: {
-                onChange: 100
-            }
-        }
-    },
+    # {
+    #     name: 'ccls',
+    #     filetype: ['c', 'cpp', 'objc'],
+    #     path: 'ccls',
+    #     args: [],
+    #     initializationOptions: {
+    #         clang: {
+    #             extraArgs: ['--gcc-toolchain=/usr']
+    #         },
+    #         compilationDatabaseDirectory: '',
+    #         diagnostics: {
+    #             onChange: 100
+    #         }
+    #     }
+    # },
     {
         conflict: 'ccls',
         name: 'clangd',
@@ -91,6 +91,12 @@ var LspServers: list<dict<any>> = [
         filetype: 'python',
         path: 'ty',
         args: ['server']
+    },
+    {
+        name: 'tombi',
+        filetype: 'toml',
+        path: 'tombi',
+        args: ['lsp']
     }
 ]
 
