@@ -19,4 +19,5 @@ endif
 for i in range(1, 9)
     execute "nnoremap <A-" .. i .. "> <cmd>silent! tabn " .. i .. "<CR>"
     execute "tnoremap <A-" .. i .. "> <cmd>silent! tabn " .. i .. "<CR>"
+    execute "inoremap <A-" .. i .. "> <cmd>silent! tabn " .. i .. "<CR>"
 endfor

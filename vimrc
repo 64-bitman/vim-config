@@ -120,7 +120,7 @@ noremap <leader>lp <cmd>lprev<cr>
 noremap <leader>la <cmd>labove<cr>
 noremap <leader>lb <cmd>lbelow<cr>
 noremap <leader>le <cmd>lnewer<cr>
-noremap <leader>lo <cmd>lolder<cr>
+noremap <leader>lo <cmd>lopen<cr>
 noremap <leader>v <cmd>silent! loadview<cr>
 vnoremap <leader>gr "hy:%s/<C-r>h//gc<left><left><left>
 nnoremap <leader>tt <cmd>call <SID>AddTermdebug()<cr><cmd>Termdebug<cr>

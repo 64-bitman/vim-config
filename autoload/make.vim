@@ -48,7 +48,7 @@ export def DoMake(bang: bool, args: string): void
         popup_close(cur_win)
     endif
     if cur_buf != -1
-        execute($":bw! {cur_buf}")
+        execute($":bw! {cur_buf}", "silent!")
     endif
 
     if &autowrite
