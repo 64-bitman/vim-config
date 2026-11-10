@@ -186,7 +186,7 @@ g:fuzzbox_window_defaults = {
     'maxheight': 0.8,
     'minheight': 0.8,
 }
-g:fuzzbox_preview = false
+# g:fuzzbox_preview = false
 g:fuzzbox_scrollbar = true
 # g:fuzzbox_selection_sign = ''
 
