@@ -1,0 +1,53 @@
+let s:lines = [
+            \ '<<<<<<< HEAD',
+            \ 'ourselves1',
+            \ '=======',
+            \ 'themselves1',
+            \ '>>>>>>> 8374eabc232',
+            \ ]
+
+lockvar s:lines
+
+Describe g:conflict_marker_hooks
+    Before
+        new
+        for l in range(1, len(s:lines))
+            call setline(l, s:lines[l-1])
+        endfor
+    End
+
+    After
+        unlet! g:conflict_marker_hooks
+        close!
+    End
+
+    It does nothing if does not have on_detected hook
+        let g:conflict_marker_hooks = {}
+        " Check exception is not thrown
+        doautocmd BufReadPost
+    End
+
+    It executes on_detected hook specified by string
+        let g:test_hooked = 0
+        function! TestHook()
+            let g:test_hooked = 1
+        endfunction
+        let g:conflict_marker_hooks = {'on_detected' : 'TestHook'}
+
+        doautocmd BufReadPost
+        Assert g:test_hooked
+        unlet g:test_hooked
+    End
+
+    It executes on_detected hook specified by funcref
+        let g:test_hooked = 0
+        let g:conflict_marker_hooks = {}
+        function! g:conflict_marker_hooks.on_detected()
+            let g:test_hooked = 1
+        endfunction
+
+        doautocmd BufReadPost
+        Assert g:test_hooked
+        unlet g:test_hooked
+    End
+End
