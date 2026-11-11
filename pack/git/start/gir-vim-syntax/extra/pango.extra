@@ -1,0 +1,13 @@
+Function pango_font_find_shaper
+Function pango_find_map pango_map_get_engine pango_map_get_engines pango_module_register
+Function script_engine_list script_engine_init script_engine_exit script_engine_create
+
+GObject PangoEngine PANGO engine
+GObject PangoEngineLang PANGO engine_lang
+GObject PangoEngineShape PANGO engine_shape
+
+Macro PANGO_ENGINE_TYPE_LANG PANGO_ENGINE_TYPE_SHAPE PANGO_RENDER_TYPE_XFT
+Macro PANGO_ENGINE_DEFINE_TYPE PANGO_ENGINE_LANG_DEFINE_TYPE PANGO_ENGINE_SHAPE_DEFINE_TYPE
+
+Struct PangoEngineInfo PangoEngineScriptInfo
+Struct PangoMap PangoMapEntry PangoIncludedModule

@@ -1,0 +1,38 @@
+Vim C extension syntax files for various libraries, mostly GTK+-related.
+
+Version 2025-08-11
+
+=====[ Usage ]==================================================================================
+
+1. Copy the contents of directory syntax to your $HOME/.vim/after/syntax
+   (or copy just selected files).
+
+2. Include selected files in your $HOME/.vim/after/syntax/c.vim like this:
+
+   runtime! syntax/glib.vim
+   runtime! syntax/gdkpixbuf.vim
+   runtime! syntax/gtk3.vim
+   runtime! syntax/pango.vim
+   runtime! syntax/cairo.vim
+
+=====[ Rebuilding/updating ]====================================================================
+
+Most syntax files are generated from gobject-introspection GIR files using src/gir-vim-syntax.py.
+Run generate.sh to rebuild the contents of syntax/. Modify GIR_PATH in generate.sh if your GIR
+files are not in /usr/share/gir-1.0.
+
+NB: generate.sh deletes entire syntax/ and creates it afresh!
+
+Missing GIRs are OK. You will just not get the corresponding Vim syntax files.
+
+Manually added symbols missing in introspection are in extras/. They are automatically added to
+the corresponding vim file (based on file name).
+
+A few additional manually created syntax files are in hand-crafted/. They are copied to syntax/
+verbatim by generate.sh.
+
+=====[ License ]================================================================================
+
+The scripts are public domain. I do not think plain lists of symbols can be copyrighted (if you
+are an Oracle lawyer, or Oracle anyone for that matter, go fuck yourself).
+
