@@ -81,6 +81,10 @@ nnoremap <leader>o o<esc>
 nnoremap <leader>O O<esc>
 nnoremap <leader>fa <cmd>FuzzyFilesRoot<CR>
 nnoremap <leader>fr <cmd>FuzzyRegisters<CR>
+nnoremap <leader>fo :FuzzyLspDocumentSymbols<CR>
+nnoremap <leader>fs :FuzzyLspWorkspaceSymbols<CR>
+xnoremap <leader>fo <Cmd>FuzzyLspDocumentSymbols<CR>
+xnoremap <leader>fs <Cmd>FuzzyLspWorkspaceSymbols<CR>
 nnoremap <S-Tab> <C-o>
 noremap <C-j> <C-d>
 noremap <C-k> <C-u>
@@ -187,7 +191,7 @@ g:fuzzbox_window_defaults = {
     'minheight': 0.8,
 }
 # g:fuzzbox_preview = false
-g:fuzzbox_preview_image = true
+g:fuzzbox_image_preview = true
 g:fuzzbox_scrollbar = true
 # g:fuzzbox_selection_sign = ''
 

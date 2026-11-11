@@ -26,3 +26,6 @@
 	path = pack/git/start/fuzzbox
     url = https://github.com/vim-fuzzbox/fuzzbox.vim.git
     ignore = dirty
+[submodule "pack/git/start/fuzzbox-lsp"]
+	path = pack/git/start/fuzzbox-lsp
+	url = https://github.com/vim-fuzzbox/fuzzbox-lsp.vim.git
