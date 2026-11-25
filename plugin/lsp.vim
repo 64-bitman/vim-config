@@ -97,6 +97,18 @@ var LspServers: list<dict<any>> = [
         filetype: 'toml',
         path: 'tombi',
         args: ['lsp']
+    },
+    {
+        name: 'c3_ls',
+        filetype: 'c3',
+        path: 'c3_ls',
+        args: [
+            '--stdio',
+            '--diagnostics-delay', '100',
+            '--stdlib-path', '/usr/lib/c3c/lib',
+            '--compiler-path', '/usr/bin/c3c',
+            '--cache-path', '.c3cache'
+        ]
     }
 ]
 

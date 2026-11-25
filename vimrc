@@ -77,6 +77,7 @@ augroup END
 nnoremap <leader>p <C-^>
 nnoremap <leader>bn <cmd>bn<cr>
 nnoremap <leader>bp <cmd>bp<cr>
+nnoremap <leader>gg <cmd>G<cr>
 nnoremap <leader>o o<esc>
 nnoremap <leader>O O<esc>
 nnoremap <leader>fa <cmd>FuzzyFilesRoot<CR>
@@ -190,8 +191,8 @@ g:fuzzbox_window_defaults = {
     'maxheight': 0.8,
     'minheight': 0.8,
 }
-# g:fuzzbox_preview = false
-g:fuzzbox_image_preview = true
+g:fuzzbox_preview = false
+# g:fuzzbox_image_preview = true
 g:fuzzbox_scrollbar = true
 # g:fuzzbox_selection_sign = ''
 
