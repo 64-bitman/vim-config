@@ -1,16 +1,16 @@
 vim9script
 
-# if $VIM_SERVERNAME != "" && $VIM_SHELL == "1"
-#     final args: list<string> = [
-#         "vim",
-#         "--servername", $VIM_SERVERNAME,
-#         "--remote-tab"
-#     ]
+if $VIM_SERVERNAME != "" && $VIM_SHELL == "1"
+    final args: list<string> = [
+        "vim",
+        "--servername", $VIM_SERVERNAME,
+        "--remote-tab"
+    ]
 
-#     args->extend(argv(-1))
-#     system(args)
-#     qall!
-# endif
+    args->extend(argv(-1))
+    system(args)
+    qall!
+endif
 
 :packadd! comment
 
@@ -50,10 +50,10 @@ augroup ColorschemeCustom
 
         # gruvbox for terminal
         g:terminal_ansi_colors = [
-                    '#282828', '#CC241D', '#98971A', '#D79921',
-                    '#458588', '#B16286', '#689D6A', '#D65D0E',
-                    '#fb4934', '#b8bb26', '#fabd2f', '#83a598',
-                    '#d3869b', '#8ec07c', '#fe8019', '#FBF1C7' ]
+            '#282828', '#CC241D', '#98971A', '#D79921',
+            '#458588', '#B16286', '#689D6A', '#D65D0E',
+            '#fb4934', '#b8bb26', '#fabd2f', '#83a598',
+            '#d3869b', '#8ec07c', '#fe8019', '#FBF1C7' ]
 
         highlight Terminal guibg=#282828 guifg=#ebdbb2
 
@@ -165,6 +165,11 @@ if has("win32")
 else
     set viminfofile=~/.config/vim/viminfo
     set viminfo+=n~/.config/vim/viminfo
+    if getenv("WSL_DISTRO_NAME") != null
+        set undodir=~/.cache/vim/undo
+        set backupdir^=~/.cache/vim/backup
+        set directory^=~/.cache/vim/swap
+    endif
 endif
 
 g:termdebug_config = {
@@ -390,10 +395,10 @@ enddef
 
 def StatusLine(): string
     var status: list<string> =<< trim eval END
-    %f%m%r%h %w%y
-    %=
-    %=
-    CWD: {GetCwd()}  (%l, %c) [%p%%,%P]
+        %f%m%r%h %w%y
+        %=
+        %=
+        CWD: {GetCwd()}  (%l, %c) [%p%%,%P]
     END
 
     return status->join(" ")

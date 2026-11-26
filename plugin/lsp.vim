@@ -12,21 +12,6 @@ var LspOptions: dict<bool> = {
 }
 
 var LspServers: list<dict<any>> = [
-    # {
-    #     name: 'ccls',
-    #     filetype: ['c', 'cpp', 'objc'],
-    #     path: 'ccls',
-    #     args: [],
-    #     initializationOptions: {
-    #         clang: {
-    #             extraArgs: ['--gcc-toolchain=/usr']
-    #         },
-    #         compilationDatabaseDirectory: '',
-    #         diagnostics: {
-    #             onChange: 100
-    #         }
-    #     }
-    # },
     {
         conflict: 'ccls',
         name: 'clangd',
@@ -112,6 +97,8 @@ var LspServers: list<dict<any>> = [
     }
 ]
 
+import autoload "../autoload/lsp.vim"
+
 var ActualLspServers: list<dict<any>> = []
 var added: list<string> = []
 
@@ -134,8 +121,6 @@ endfor
 
 g:LspOptionsSet(LspOptions)
 g:LspAddServer(ActualLspServers)
-
-import autoload "../autoload/lsp.vim"
 
 augroup CustomLsp
     au User LspAttached {
